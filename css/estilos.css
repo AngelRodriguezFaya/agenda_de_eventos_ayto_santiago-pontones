@@ -1,13 +1,15 @@
 /* estilos.css */
 
+
+
+/* ==========================================================================
+   ESTILOS GENERALES
+   ========================================================================== */
 * {
     /* Familia de fuentes para toda la página */
     font-family: Arial, Helvetica, sans-serif;
 }
 
-/* ==========================================================================
-   ESTILOS GENERALES
-   ========================================================================== */
 body {
     /* Le decimos al body que funcione como una cuadrícula */
     display: grid; 
@@ -380,6 +382,7 @@ article.evento .zona-central-evento {
     padding: 20px;
     font-size: 18px;
     color: black;
+    text-align: justify;
 }
 
 /* Título de la galería de imágenes */
