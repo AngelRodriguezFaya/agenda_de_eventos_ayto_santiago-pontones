@@ -1,0 +1,264 @@
+/* estilos.css */
+
+* {
+    /* Familia de fuentes para toda la página */
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    /* Le decimos al body que funcione como una cuadrícula */
+    display: grid; 
+
+    
+
+    /* Imagen de fondo */
+    background-image: url("../images/Santiago_de_la_Espada.jpeg");
+    background-size: cover; /* Para que la imagen ocupe todo el fondo */
+    background-position: center; /* Para centrar la imagen */
+    background-attachment: fixed; /* Para que la imagen no se mueva al hacer scroll
+    
+    /* Definimos el tamaño de las filas y columnas */
+    grid-template-columns: minmax(150px, 250px) 1fr ; 
+
+    /* header y footer ocupan lo que necesiten;*/
+    /* zona central (aside y main) cogen el todo el espacio libre que sobre 1fr */
+    grid-template-rows: auto 1fr auto; 
+    
+    /* Aquí "dibujamos" el mockup */
+    grid-template-areas:
+        "header header"
+        "sidebar  main"
+        "footer footer";
+        
+    min-height: 100vh;  /* Para que ocupe toda la altura de la pantalla */
+    margin: 0;
+    gap: 20px; /* Espacio entre los bloques */
+}
+
+/* ------------------------ HEADER ----------------------------------- */
+
+/* Ahora asignamos cada etiqueta HTML a su "área" dibujada arriba */
+header { /* Selector de elemento */
+    grid-area: header; 
+
+    background-color: rgb(248, 245, 230);
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+    align-items: center;
+    align-content: stretch;
+    gap: 30px;
+}
+
+#logo-principal { /* Selector de ID */
+    width: 250px;
+    height: auto;
+    padding: 2%;
+}
+
+#logo-principal:hover { /* Selector de ID con pseudo-clase */
+    filter: brightness(0.9); /* Para oscurecer la imagen al pasar el cursor por encima del logo */
+}
+
+#titulo-principal { 
+    font-weight: 700;
+    text-align: center;
+    color: black;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.menu-cabecera { /* Selector de clase */
+    list-style: none;
+    /* Para que no ocupe espacio extra invisible por los márgenes/paddings */
+    padding: 0;
+    margin: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.menu-cabecera a { /* Para darle estilo a los enlaces del menú de cabecera */
+    font-size: 90%;
+    color: #2052a2;
+    text-decoration: none; /* Para quitar el subrayado de los enlaces */
+    padding: 10px 20px; /* Relleno interior. 10px arriba/abajo, 20px a los lados */;
+}
+
+
+/* ------------------------- ASIDE ----------------------------------- */
+
+aside  { 
+    grid-area: sidebar;
+    background-color: rgba(248, 245, 230, 0.65);
+    border-radius: 7px;
+}
+
+aside ul { /* Selector descendente */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+    
+
+.button_menu {
+    width: 100%; /* Para que el botón ocupe todo el ancho del menú lateral */
+    padding: 5%; 
+    margin: 5px 0; /* Para separar los botones entre sí */
+    font-size: 20px;
+    font-family: Arial, sans-serif;
+    background-color: #2052a2;
+    color: white;
+    border-style: solid;
+    border-radius: 10px;
+    border-width: 1px;
+    border-color: rgb(163, 206, 250);
+    cursor: pointer; /* Para que el cursor cambie a la mano al pasar por encima del botón */
+}
+
+/* SOLO SE ACTIVA AL PASAR EL CURSOR POR ENCIMA DEL BOTÓN */
+.button_menu:hover { /* Selector de clase con pseudo-clase */
+    background-color: rgb(163, 206, 250);
+    color: white;
+}
+
+
+
+/* ------------------------- MAIN ----------------------------------- */
+
+main   { 
+    grid-area: main; 
+    background-color: rgba(248, 245, 230, 0.65);
+    padding: 20px; /* Para darle un poco de espacio interior */
+    border-radius: 7px;
+}
+
+.zona-eventos{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Nro de columnas */
+    grid-auto-flow: row;
+    justify-items: center;
+    align-items: center;
+    justify-content: space-evenly;
+    align-content: space-evenly;
+    gap: 20px;    
+}
+
+
+.tarjeta-evento {
+    background-color: rgba(248, 245, 230);
+    
+    /* Bordes marcados y redondeados */
+    border: 1px solid #143469;
+    border-radius: 7px;
+
+    padding: 10px; /* Para darle un poco de espacio interior */
+    
+    text-align: center; /* Para centrar el texto dentro de la tarjeta */
+}
+
+.tarjeta-evento a { /* Para que el enlace ocupe toda la tarjeta */
+    text-decoration: none; /* Para quitar el subrayado del enlace */
+}
+
+.tarjeta-evento:hover {
+    background-color: rgb(195, 224, 253);
+    filter: brightness(0.9); /* Para oscurecer la imagen al pasar el cursor por encima de la tarjeta */
+}
+
+.imagen-evento { /* Igual que hacer .tarjeta-evento img */
+    width: 100%; /* Para que la imagen ocupe todo el ancho de la tarjeta */
+    height: auto; /* Para mantener la proporción de la imagen */
+    border-radius: 7px; /*Para redondear los bordes de la imagen */
+}
+
+.titulo-evento {
+    font-size: 18px;
+    font-weight: 700;
+    color: #2052a2;
+}
+
+.fecha-evento {
+    font-size: 14px;
+    color: #3c70c3;
+}
+
+.descripcion-evento {
+    font-size: 14px;
+    color: #3c70c3;
+}
+
+
+
+/* ------------------------- FOOTER ----------------------------------- */
+
+footer { 
+    grid-area: footer;
+    background-color: #2052a2;
+    padding: 10px 20px; /* Le damos un poco de espacio interior */
+    color: rgb(248, 245, 230); /* Para que el texto sea blanco */
+}
+
+.enlaces-footer { 
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    align-items: center;
+    align-content: center;
+    gap: 20px;
+}
+
+.enlaces-footer a { /*Para darle estilo a los enlaces del footer*/
+    flex-grow: 100;
+    text-align: center;
+    color: rgb(248, 245, 230);
+    text-decoration: none;
+    padding: 10px 20px; /*Relleno interior. 10px arriba/abajo, 20px a los lados*/
+    border: 1px solid rgb(248, 245, 230); /* Borde blanco de 1px */
+    border-radius: 7px; /* Bordes redondeados */
+}
+
+/* SOLO SE ACTIVA AL PASAR EL CURSOR POR ENCIMA DE LOS ENLACES DEL FOOTER */
+.enlaces-footer a:hover { 
+    background-color: rgb(248, 245, 230); /* Fondo */
+    color: #2052a2; /* Texto azul */
+}
+
+.copyright {
+    text-align: right; /* Para alinear el texto a la derecha */
+    margin-top: 20px; /* Para separar el texto de la parte superior del footer */
+}
+
+
+
+/* ========================== MEDIA QUERIES =============================== */
+
+/* MEDIA QUERY (pantallas más pequeñas)*/
+/* Si la pantalla mide 768px o menos, aplica esto */
+@media (max-width: 768px) {
+
+    body{
+        grid-template-columns: minmax(50px, 150px) 1fr ; 
+    }
+
+    header {
+        flex-direction: column; /* Para que los elementos del header se apilen verticalmente */
+        gap: 10px; /* Para reducir el espacio entre los elementos del header */
+    }
+
+    .zona-eventos {
+        /*Mínimo 3 columnas: Sobrescribimos la regla de arriba para que ahora sean 3 columnas */
+        grid-template-columns: repeat(3, 1fr); 
+    }
+
+    .titulo-evento {
+        font-size: 16px; /* Para que el título sea un poco más pequeño en pantallas pequeñas */
+    }
+
+    .fecha-evento, .descripcion-evento {
+        font-size: 12px; /* Para que la fecha y descripción sean un poco más pequeñas en pantallas pequeñas */
+    }
+}
