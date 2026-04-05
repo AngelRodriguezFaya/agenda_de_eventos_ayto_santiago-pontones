@@ -281,6 +281,8 @@ article.evento{
 
 /* ---- Elementos del encabezado del evento ---- */
 article.evento .encabezado-evento { /*Selector desccendente */
+    position: sticky;
+    top: 0; /* Para que el encabezado se quede pegado a la parte superior de la pantalla al hacer scroll */
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -457,3 +459,117 @@ article.evento .galeria-imagenes h3 {
 
 }
 
+/* ==========================================================================
+   PANEL LATERAL DE COMENTARIOS EN EVENTO (evento.html) - PRÁCTICA 2    
+   ========================================================================== */
+
+/* Área sensible para abrir el panel de los comentarios */
+#desplegar_panel_comentarios {
+    position: fixed; /* Para que se quede fijo en la pantalla al hacer scroll */
+    top: 0;
+    right: 0;
+    width: 20px;    /* Ancho del área sensible para desplegar el panel */
+    height: 100vh;  /* Para que ocupe toda la altura de la pantalla */ 
+    z-index: 99;    /* Para que esté por encima de otros elementos pero por debajo del panel de comentarios */
+}
+
+/* El panel lateral principal */
+#panel_comentarios {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 25vw;
+    height: 100vh;
+    background-color: white;
+
+    /* Sombra para darle profundidad al panel */
+    /* Funciona en el orden: eje X, eje Y, difuminado, color */
+    /* Si en eje X o Y pones un número negativo, la sombra se desplazará hacia la izquierda, si es positivo, hacia la derecha. */
+    box-shadow: -5px 0 15px rgba(0,0,0,0.2); 
+
+    z-index: 100; /* Lo más alto para que esté por encima de lo demás */
+    padding: 20px;
+    box-sizing: border-box; /* Para que el padding no aumente el tamaño total del panel */
+    overflow-y: auto;
+    
+    /* Animación suave al entrar/salir */
+    transition: transform 0.4s ease-in-out; 
+}
+
+/* La clase 'oculto' (Indica si el panel se encuentra oculto) */
+#panel_comentarios.oculto {
+    transform: translateX(100%); /* Para mover el panel completamente fuera de la pantalla  y hacia la derecha */
+    display: block; 
+}
+
+/* ================= Estilos de los elementos del panel de comentarios ================= */
+.cabecera-panel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #2052a2;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+}
+
+.cabecera-panel h3 {
+    color: #2052a2;
+    margin: 0;
+}
+
+#btn-cerrar-comentarios {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#btn-aniadir-comentario {
+    width: 100%;
+    background-color: #2052a2;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 7px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+/* Para los campos y etiquetas del formulario de comentarios */
+#form-comentario label, #form-comentario input, #form-comentario textarea {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+#form-comentario input, #form-comentario textarea {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#form-comentario button {
+    padding: 8px 15px;
+    margin-right: 10px;
+    cursor: pointer;
+    border: none;
+    border-radius: 7px;
+    color: white;
+}
+
+#form-comentario button:hover {
+    opacity: 0.7; /* Para que el botón se oscurezca un poco al pasar el cursor por encima */
+}
+
+#btn-enviar-comentario { 
+    background-color: #28a745; 
+}
+
+#btn-cancelar-comentario { 
+    background-color: #6c757d; 
+}
