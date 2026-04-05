@@ -539,6 +539,17 @@ article.evento .galeria-imagenes h3 {
     font-size: 16px;
 }
 
+#form-comentario {
+    display: block; /* Para mostrar el formulario cuando se le quite la clase 'oculto' */
+    background-color: rgb(248, 245, 230);
+    border-radius: 7px;
+    padding: 10px;
+}
+
+#form-comentario.oculto {
+    display: none; /* Para que el formulario esté oculto por defecto */
+}
+
 /* Para los campos y etiquetas del formulario de comentarios */
 #form-comentario label, #form-comentario input, #form-comentario textarea {
     display: block;
