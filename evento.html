@@ -146,7 +146,7 @@
                 </div>
             </section>
 
-            <section class="zona-comentarios">
+            <!-- <section class="zona-comentarios">
                 <h3>Comentarios</h3>
                     
                 <article class="comentario">
@@ -158,7 +158,48 @@
                     <p class="autor-comentario"><strong>Juan Pérez</strong> - 16 de febrero de 2026</p>
                     <p>¿Dónde podemos hacer la inscripción oficial? ¿Habrá puntos de avituallamiento?</p>
                 </article>
-            </section>
+            </section> -->
+
+            <div id="desplegar_panel_comentarios"></div>
+
+            <aside id="panel_comentarios" class="oculto">
+
+                <!-- Cabacera del panel de comentarios -->
+                <div class="cabecera-panel">
+                    <h3>Comentarios</h3>
+                    <button id="btn-cerrar-comentarios" title="Cerrar el panel de comentarios">X</button>
+                </div>
+
+                <!-- Añadir un comentario -->
+                <button id="btn-aniadir-comentario">Añadir un comentario</button> 
+
+                <form id="form-comentario" class="oculto">
+                    <h4>Añada el comentario</h4>
+
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre">
+
+                    <label for="email">E-mail:</label>
+                    <input type="text" id="email" name="email">
+
+                    <label for="texto-comentario">Comentario:</label>
+                    <textarea id="texto-comentario" name="texto-comentario" rows="4"></textarea>
+                
+                    <!-- Botones para enviar o cancelar comentario -->
+                    <button type="button" id="btn-enviar-comentario">Enviar</button>
+                    <button type="button" id="btn-cancelar-comentario">Cancelar</button>
+                </form>
+
+
+
+                <!-- Lista de comentarios de otras personas -->
+                <div id="lista-comentarios">
+
+                </div>
+
+            </aside>
+
+
 
         </article>
 
@@ -178,6 +219,10 @@
         </section>
 
     </footer>
+
+    
+    <!-- Añado el archivo de JavaScript -->
+    <script src="js/index.js"></script>
 
 </body>
 
