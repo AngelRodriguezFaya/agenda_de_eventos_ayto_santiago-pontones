@@ -544,6 +544,7 @@ article.evento .galeria-imagenes h3 {
     background-color: rgb(248, 245, 230);
     border-radius: 7px;
     padding: 10px;
+    margin-bottom: 10px;
 }
 
 #form-comentario.oculto {
@@ -603,4 +604,63 @@ article.evento .galeria-imagenes h3 {
 #lista-comentarios .comentario .fecha-comentario{
     color: rgb(110, 110, 110);
     font-size: 15px;
+}
+
+/* ----------------- Para mostrar un dialogo modal personalizado ------------------ */
+#mensaje-error {
+    /* Posicionamiento: lo sacamos del flujo normal y lo fijamos a la pantalla */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Para centrarlo de forma perfecta */
+    z-index: 1000; /* Le damos una jerarquía muy alta para que se ponga por encima de todo lo de,mas */
+
+    /* Diseño de la caja */
+    background-color: rgb(47, 47, 47);
+    padding: 30px 40px;
+    /* border-radiupx; */
+    width: 300px;
+    text-align: center;
+    border: 2px solid #dc3545; 
+
+    /* Para poner el fondo oscuro */
+    /* La primera sombra da volumen a la caja. 
+       La segunda sombra es gigante (10000px) y oscura, creando el efecto de bloquear la pantalla */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2), 0 0 0 10000px rgba(0,0,0,0.6);
+}
+
+/* La clase 'oculto' (Indica si el panel se encuentra oculto) */
+#mensaje-error.oculto {
+    display: none; /* Para ocultar el mensaje de error por defecto */
+}
+
+/* Título del error */
+#mensaje-error h5 {
+    color: #dc3545; 
+    font-size: 20px;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+/* Texto del error */
+#texto-error {
+    font-size: 16px;
+    color: white;
+    margin-bottom: 20px;
+}
+
+/* Botón de aceptar */
+#btn-aceptar-msg-error {
+    background-color: #2052a2;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#btn-aceptar-msg-error:hover {
+    background-color: #173d7a; /* Un azul un poco más oscuro al pasar el ratón */
 }
