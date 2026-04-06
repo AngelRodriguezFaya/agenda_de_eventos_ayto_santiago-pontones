@@ -7,7 +7,6 @@
 
 const OCULTO_CLASS = 'oculto'; // Clase que indica que un elemento se debe ocultar
 
-
 // Opciones para formatear la fecha y hora en español
 // Ejemplo: "15 de septiembre de 2025, 14:30"
 const opcionesFecha = { 
@@ -19,7 +18,7 @@ const opcionesFecha = {
 };
 
 
-// Comentarios iniciales harcodeados
+// Array de comentarios iniciales harcodeados
 const comentariosIniciales = [
     {
         nombre: "María Gómez",
@@ -36,6 +35,21 @@ const comentariosIniciales = [
         email: "juanitomtb@yahoo.com",
         texto: "He participado en varias ediciones y cada año me sorprende la belleza del recorrido. Me encanta ir a Santiago de la Espada para disfrutar de la naturaleza y de la bici. ¡Recomiendo a todos que se animen a participar!"
     }
+];
+
+
+// Array de 10 localidades del municipio de Santiago-Pontones.
+const localidades = [ 
+    "santiago de la espada",
+    "la matea",
+    "pontones",
+    "cerezo",
+    "cañuelos",
+    "teatinos",
+    "marchena",
+    "miller",
+    "ruices",
+    "atascaderos",
 ];
 
 
@@ -151,9 +165,14 @@ document.addEventListener("DOMContentLoaded", function() {
     const btnAceptarError = document.getElementById('btn-aceptar-msg-error');
 
     // Etiquetas (labels) del formulario.
-    const labelNombre = document.querySelector('label[for="nombre"]');
-    const labelEmail = document.querySelector('label[for="email"]');
-    const labelTexto = document.querySelector('label[for="texto-comentario"]');
+    const labelNombre = document.querySelector('label[for="f-nombre"]');
+    const labelEmail = document.querySelector('label[for="f-email"]');
+    const labelTexto = document.querySelector('label[for="f-texto-comentario"]');
+
+    // Campos (o cajones de texto) del formulario.
+    const campoNombre = document.getElementById('nombre')
+    const campoEmail = document.getElementById('email');
+    const campoTexto = document.getElementById('texto-comentario')
 
 
     // ------------ Cargamos los comentarios iniciales al cargar la página -----------------
@@ -185,9 +204,9 @@ document.addEventListener("DOMContentLoaded", function() {
         event.preventDefault(); // Evitamos que el formulario recargue la página al hacer submit
 
         // Paso 1: Capturamos los valores de los campos del formulario
-        const nombre = document.getElementById('nombre').value.trim(); // trim() para eliminar espacios en blanco al inicio y al final
-        const email = document.getElementById('email').value.trim();
-        const texto = document.getElementById('texto-comentario').value.trim();
+        const nombre = campoNombre.value.trim(); // trim() para eliminar espacios en blanco al inicio y al final
+        const email = campoEmail.value.trim();
+        const texto = campoTexto.value.trim();
 
         // RESETEAMOS LAS ETIQUETAS (por si el usuario está reintentando enviar)
         // pero no el contenido de los campos
@@ -269,4 +288,22 @@ document.addEventListener("DOMContentLoaded", function() {
         ocultarElemento(mensajeError);
     }); 
 
+    // evento para capturar lo que se escribe en el texto del comentario
+    // y poder localizar palabras relacionadas con las localidades para mostrarlas resaltadas
+    campoTexto.addEventListener('input', function() {
+        // Paso 1: Leemos y guardamos todo lo que el usuario ha escrito hasta ahora
+        let textoActual = campoTexto.value;
+
+        // Paso 2: Recorremos el array de localidades
+        localidades.forEach(function(localidad) {
+            // Expresión regular para buscar la localidad de forma global e insensible a mayúsculas/minúsculas
+            let rastreador = new RegExp(localidad, "gi");
+
+            // Reemplazamos en el texto
+            textoActual = textoActual.replace(rastreador, localidad.toUpperCase());
+        });
+
+        // Paso 3: Devolvemos el texto ya corregido a la caja del formulario
+        campoTexto.value = textoActual;
+    });
 });
