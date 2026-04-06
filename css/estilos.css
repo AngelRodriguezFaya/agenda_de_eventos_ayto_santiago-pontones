@@ -414,28 +414,28 @@ article.evento .galeria-imagenes h3 {
 }
 
 /* Zona de comentarios */
-.zona-comentarios {
+/* .zona-comentarios {
     margin-top: 40px;
     background-color: rgba(255, 255, 255, 0.7); 
     padding: 20px;
     border-radius: 8px;
     border: 1px solid #ddd;
-}
+} */
 
 /* Título de la zona de comentarios */
-.zona-comentarios h3 {
+/* .zona-comentarios h3 {
     color: #2052a2;
-}
+} */
 
 /*Cada comentario individual */
-.zona-comentarios .comentario {
+/* .zona-comentarios .comentario {
     background-color: white;
     border-radius: 5px;
     padding: 15px;
     margin-bottom: 15px;
-    border-left: 4px solid #2052a2; /* Línea vertical para destacar el comentario */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra para darle profundidad y que paezca una caja*/
-}
+    border-left: 4px solid #2052a2; /* Línea vertical para destacar el comentario 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra para darle profundidad y que paezca una caja
+} */
 
 /* MEDIA QUERY (pantallas más pequeñas)*/
 /* Si la pantalla mide 768px o menos, aplica esto */
@@ -583,4 +583,24 @@ article.evento .galeria-imagenes h3 {
 
 #btn-cancelar-comentario { 
     background-color: #6c757d; 
+}
+
+#lista-comentarios .comentario{
+    background-color: white;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-left: 4px solid #2052a2; /* Línea vertical para destacar el comentario */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra para darle profundidad y que paezca una caja*/
+}
+
+#lista-comentarios .comentario .email-comentario{
+    color: rgb(148, 148, 148);
+    font-family: sans-serif;
+    font-size: 15px;
+}
+
+#lista-comentarios .comentario .fecha-comentario{
+    color: rgb(110, 110, 110);
+    font-size: 15px;
 }
