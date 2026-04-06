@@ -1,4 +1,12 @@
+// index.js
+// Ángel Rodríguez Faya
+
+// ==========================================================================================================
+//                          CONSTANTES Y DATOS INICIALES
+// ==========================================================================================================
+
 const OCULTO_CLASS = 'oculto'; // Clase que indica que un elemento se debe ocultar
+
 
 // Opciones para formatear la fecha y hora en español
 // Ejemplo: "15 de septiembre de 2025, 14:30"
@@ -9,6 +17,7 @@ const opcionesFecha = {
     hour: '2-digit', 
     minute: '2-digit' 
 };
+
 
 // Comentarios iniciales harcodeados
 const comentariosIniciales = [
@@ -29,22 +38,42 @@ const comentariosIniciales = [
     }
 ];
 
+
+// ==========================================================================================================
+//                              FUNCIONES AUXILIARES
+// ==========================================================================================================
+
 // Esta función recibe un "elemento" de HTML y le quita la clase oculto
 function mostrarElemento(elemento) {
     elemento.classList.remove(OCULTO_CLASS);
 }
+
 
 // Esta función recibe un "elemento" de HTML y le pone la clase oculto
 function ocultarElemento(elemento) {
     elemento.classList.add(OCULTO_CLASS);
 }
 
-function limpiarEltosFormulario() {
+
+// Limpia los campos del formulario y resetea los labels a su estado original
+function limpiarEltosFormulario(lNombre, lEmail, lTexto) {
     document.getElementById('nombre').value = '';
     document.getElementById('email').value = '';
     document.getElementById('texto-comentario').value = '';
+
+    // Reseteamos las etiquetas (labels) a su estado original
+    lNombre.style.color = ''; // Al dejarlo vacío, vuelve al color por defecto del CSS
+    lNombre.textContent = 'Nombre:';
+
+    lEmail.style.color = '';
+    lEmail.textContent = 'E-mail:';
+
+    lTexto.style.color = '';
+    lTexto.textContent = 'Comentario:';
 }
 
+
+// Crea un comentario con los parámetros pasados, y lo devuelve
 function crearComentario(nombre, email, texto) {
     const comentario = document.createElement('div');
     comentario.classList.add('comentario');
@@ -75,6 +104,8 @@ function crearComentario(nombre, email, texto) {
     return comentario;
 }
 
+
+// Esta función carga los comentarios iniciales que están harcodeados (ya que no tenemos BD)
 // Le pedimos que reciba el 'contenedor' para que sepa dónde tiene que pegar los comentarios
 function cargarComentariosIniciales(contenedor) {
     // Usamos el bucle forEach para recorrer cada comentario del array
@@ -87,77 +118,155 @@ function cargarComentariosIniciales(contenedor) {
     });
 }
 
+
+// Comprueba si un email es válido haciendo uso de una expresión regular.
+function esEmailValido(email) {
+    const exprRegEmail = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
+    return exprRegEmail.test(email);
+}
+
+
+// ==========================================================================================================
+//                              MANEJO DEL DOM 
+// ==========================================================================================================
+
 // Nos aseguramos de que el DOM esté completamente cargado antes de ejecutar nuestro código
 document.addEventListener("DOMContentLoaded", function() {
 
-    // En primer lugar, capturamos los elementos del DOM
+    // -------- En primer lugar, capturamos los elementos del DOM -----------------------
+    // Elementos relacionados con la apertura/cierre del panel de comentarios
     const desplegarPanel = document.getElementById('desplegar_panel_comentarios');
     const btnCerrarPanel = document.getElementById('btn-cerrar-comentarios');
-
     const panelComentarios = document.getElementById('panel_comentarios');
     
+    // Elementos relacionados con añadir un nuevo comentario
     const btnAniadirComentario = document.getElementById('btn-aniadir-comentario');
     const formComentario = document.getElementById('form-comentario');
-    // const btnEnviarComentario = document.getElementById('btn-enviar-comentario');
     const btnCancelarComentario = document.getElementById('btn-cancelar-comentario');
-    
     const listaComentarios = document.getElementById('lista-comentarios');
 
-    // Cargamos los comentarios iniciales al cargar la página
+    // Elementos relacionados con el mensaje de error (modal personalizado)
+    const mensajeError = document.getElementById('mensaje-error');
+    const textoError = document.getElementById('texto-error');
+    const btnAceptarError = document.getElementById('btn-aceptar-msg-error');
+
+    // Etiquetas (labels) del formulario.
+    const labelNombre = document.querySelector('label[for="nombre"]');
+    const labelEmail = document.querySelector('label[for="email"]');
+    const labelTexto = document.querySelector('label[for="texto-comentario"]');
+
+
+    // ------------ Cargamos los comentarios iniciales al cargar la página -----------------
     cargarComentariosIniciales(listaComentarios);
     
+
+    // --------- Añadimos los eventos a los elementos del DOM ------------------------------
 
     // evento para abrir el panel de comentarios
     desplegarPanel.addEventListener('mouseenter', function() { 
         mostrarElemento(panelComentarios);
     });
 
+
     // evento para cerrar el panel de comentarios
     btnCerrarPanel.addEventListener('click', function() {
         ocultarElemento(panelComentarios);
     });
+
 
     // evento para mostrar el formulario de añadir comentario
     btnAniadirComentario.addEventListener('click', function() {
         formComentario.classList.remove(OCULTO_CLASS); // Mostramos el formulario
     });
 
-    // evento para enviar el comentario
-    // btnEnviarComentario.addEventListener('click', function() {
-    //     const nombre = document.getElementById('nombre').value.trim(); // trim() para eliminar espacios en blanco al inicio y al final
-    //     const email = document.getElementById('email').value.trim();
-    //     const texto = document.getElementById('texto-comentario').value.trim();
-    //     const comentario = crearComentario(nombre, email, texto);
-    //     listaComentarios.prepend(comentario); // COn prepend() añadimos el nuevo comentario al principio de la lista
-    //     ocultarElemento(formComentario); // Ocultamos el formulario después de enviar el comentario
-    //     // Limpiamos los campos del formulario
-    //     limpiarEltosFormulario();
-    // });
 
+    // evento para añadir el comentario
     formComentario.addEventListener('submit', function(event) {
         event.preventDefault(); // Evitamos que el formulario recargue la página al hacer submit
 
+        // Paso 1: Capturamos los valores de los campos del formulario
         const nombre = document.getElementById('nombre').value.trim(); // trim() para eliminar espacios en blanco al inicio y al final
         const email = document.getElementById('email').value.trim();
         const texto = document.getElementById('texto-comentario').value.trim();
+
+        // RESETEAMOS LAS ETIQUETAS (por si el usuario está reintentando enviar)
+        // pero no el contenido de los campos
+        labelNombre.style.color = ''; labelNombre.textContent = 'Nombre:';
+        labelEmail.style.color = '';  labelEmail.textContent = 'E-mail:';
+        labelTexto.style.color = '';  labelTexto.textContent = 'Comentario:';
+
+        // Paso 2: Comprobamos que no haya ningún campo vacío
+        let hayCamposVacios = false; // flag
+
+        if (nombre === '') {
+            labelNombre.style.color = 'red';
+            labelNombre.textContent = 'Nombre: *no puede estar vacío';
+            hayCamposVacios = true; // Levantamos el flag de error
+        }
+
+        if (email === '') {
+            labelEmail.style.color = 'red';
+            labelEmail.textContent = 'E-mail: *no puede estar vacío';
+            hayCamposVacios = true; 
+        }
+
+        if (texto === '') {
+            labelTexto.style.color = 'red';
+            labelTexto.textContent = 'Comentario: *no puede estar vacío';
+            hayCamposVacios = true; 
+        }
+
+        // Si el flag está activo, mostramos el modal (el mensaje de error) y abortamos
+        if (hayCamposVacios) {
+            let mensaje = "Por favor, completa todos los campos del formulario para poder añadir tu comentario.";
+            textoError.textContent = mensaje; 
+            mostrarElemento(mensajeError); 
+            
+            return; // Salimos de la función para que no se cree el comentario
+        }
+
+        // Paso 3: Comprobamos que el email tiene un formato válido
+        if(!esEmailValido(email)) {
+            labelEmail.style.color = 'red';
+            labelEmail.textContent = 'E-mail: *formato no válido';
+
+            let mensaje = "El formato del email no es correcto. Por favor, introduce una dirección de correo electrónico válida.";
+            textoError.textContent = mensaje; 
+            mostrarElemento(mensajeError);
+
+            return; // Salimos de la función para que no se cree el comentario
+        }
+
+        // Paso 4: Si todo es correcto, creamos el nuevo comentario y lo añadimos a la lista
         const comentario = crearComentario(nombre, email, texto);
 
-        // Mostramos un cuadro de confirmación antes de añadir el comentario a la lista
+            // Mostramos un cuadro de confirmación antes de añadir el comentario a la lista
         const confirmacion = confirm("¿Estás seguro de que quieres añadir este comentario?"); // Mostramos un cuadro de confirmación
+        
         if (confirmacion) { // Si es true, agregamos el comentario a la lista, si es false, no hacemos nada
             listaComentarios.prepend(comentario); // COn prepend() añadimos el nuevo comentario al principio de la lista
+            alert("¡Comentario enviado! Gracias por tu participación."); // Mostramos un mensaje de alerta al enviar el comentario
         }
+
+        // Paso 5: Ocultamos el formulario y limpiamos los campos
         
         ocultarElemento(formComentario); // Ocultamos el formulario después de enviar el comentario
-        // Limpiamos los campos del formulario
-        limpiarEltosFormulario();
-
+        
+        limpiarEltosFormulario(labelNombre, labelEmail, labelTexto); // Limpiamos los campos del formulario
     });
     
-    // evento para cancelar el comentario
+
+    // evento para cancelar la agregación del comentario
     btnCancelarComentario.addEventListener('click', function() {
         ocultarElemento(formComentario); // Ocultamos el formulario
         // Limpiamos los campos del formulario
-        limpiarEltosFormulario();
+        limpiarEltosFormulario(labelNombre, labelEmail, labelTexto);
     });
+
+
+    // evento para ocultar el dialogo modal personalizado (para errores)
+    btnAceptarError.addEventListener('click', function() {
+        ocultarElemento(mensajeError);
+    }); 
+
 });
