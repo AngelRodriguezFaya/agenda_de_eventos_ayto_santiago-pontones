@@ -135,6 +135,7 @@ function cargarComentariosIniciales(contenedor) {
 
 // Comprueba si un email es válido haciendo uso de una expresión regular.
 function esEmailValido(email) {
+    /* \w en JavaScript equivale a [A-Za-z0-9_]*/
     const exprRegEmail = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
     return exprRegEmail.test(email);
 }
@@ -209,7 +210,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const texto = campoTexto.value.trim();
 
         // RESETEAMOS LAS ETIQUETAS (por si el usuario está reintentando enviar)
-        // pero no el contenido de los campos
+        // Pero NO SE RESETEA EL CONTENIDO de los campos
         labelNombre.style.color = ''; labelNombre.textContent = 'Nombre:';
         labelEmail.style.color = '';  labelEmail.textContent = 'E-mail:';
         labelTexto.style.color = '';  labelTexto.textContent = 'Comentario:';
@@ -300,7 +301,10 @@ document.addEventListener("DOMContentLoaded", function() {
             let rastreador = new RegExp(localidad, "gi");
 
             // Reemplazamos en el texto
+            // la sintaxis es: texto.replace(rastreador, nuevoValor)
+            // no modificamos el texto original, sino que nos devuelve una nueva cadena con los cambios.
             textoActual = textoActual.replace(rastreador, localidad.toUpperCase());
+            campoTexto.style.border = '2px solid green'; 
         });
 
         // Paso 3: Devolvemos el texto ya corregido a la caja del formulario
