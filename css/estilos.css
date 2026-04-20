@@ -468,7 +468,7 @@ article.evento .galeria-imagenes h3 {
     position: fixed; /* Para que se quede fijo en la pantalla al hacer scroll */
     top: 0;
     right: 0;
-    width: 20px;    /* Ancho del área sensible para desplegar el panel */
+    width: 10px;    /* Ancho del área sensible para desplegar el panel */
     height: 100vh;  /* Para que ocupe toda la altura de la pantalla */ 
     z-index: 99;    /* Para que esté por encima de otros elementos pero por debajo del panel de comentarios */
 }
