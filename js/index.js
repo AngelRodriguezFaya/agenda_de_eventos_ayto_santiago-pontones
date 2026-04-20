@@ -304,7 +304,6 @@ document.addEventListener("DOMContentLoaded", function() {
             // la sintaxis es: texto.replace(rastreador, nuevoValor)
             // no modificamos el texto original, sino que nos devuelve una nueva cadena con los cambios.
             textoActual = textoActual.replace(rastreador, localidad.toUpperCase());
-            campoTexto.style.border = '2px solid green'; 
         });
 
         // Paso 3: Devolvemos el texto ya corregido a la caja del formulario
