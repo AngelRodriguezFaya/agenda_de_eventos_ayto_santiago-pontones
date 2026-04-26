@@ -1,0 +1,101 @@
+{# padre.html #}
+{# Página plantilla para el resto de la Agenda de Eventos #}
+
+<!DOCTYPE html>
+<html lang="es" dir="ltr"> <!-- Idioma de la página y orden en el que se lee (de izq. a dcha.) -->
+
+<head> 
+    {# El título puede tener un valor por defecto, pero permitimos que el hijo lo cambie #}
+    <title>{% block titulo %}Agenda de Eventos - Excmo. Ayuntamiento de Santiago Pontones.{% endblock %}</title> <!-- titulo de la página -->
+
+    {# Estilos generales que comparten todas las páginas #}
+    <link rel="stylesheet" href="../css/estilos.css"> <!-- Hoja de estilo -->
+    
+    {# Dejamos un bloque por si una página concreta necesita un CSS adicional #}
+    {% block css_extra %}{% endblock %}
+
+    <link rel="icon" type="image/xicon" href="../images/icono.ico"> <!-- icono de la ventana-->
+    <meta charset="UTF-8"> <!--conjunto de caracteres utilizado -->
+    <meta name="keywords" content="HTML, CSS, Santiago-Pontones"> <!-- palabras clave -->
+    <meta name="author" content="Ángel Rodríguez Faya"> <!-- Autor de la página -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- (Web Responsive) -->
+    <meta name="robots" content="index"> <!-- Para aperecer en el buscador -->
+</head>
+
+<body> 
+
+    <header> <!-- Zona de encabezado -->
+
+        <!-- Logo -->
+        <a href="portada.php" title="Volver a la página principal">
+            <img id="logo-principal" src="../images/logo.png" alt="Logo de la Agenda de Eventos">
+        </a>
+        <!-- Nombre del sitio -->
+        <span>
+            <h1 id="titulo-principal">Agenda de Eventos · Excmo. Ayuntamiento de Santiago Pontones.</h1>
+        </span>
+
+        <!-- Enlaces -->
+        <nav class="navbar">
+            <ul class ="menu-cabecera">
+
+                <li>
+                    <a href="https://www.santiagopontones.es/el-municipio/fiestas/" target="_blank" rel="noopener noreferrer"
+                        title="Ir a la página sobre Fiestas."> Página sobre las Fiestas Populares.
+                    </a>
+                </li>
+
+                <li>
+                    <a href="https://santiagopontones.bracelit.es/" target="_blank" rel="noopener noreferrer"
+                        title="Ir a la página del área de deportes."> Página del área de deportes.
+                    </a>
+                </li>
+
+                <li>
+                    <a href="https://www.santiagopontones.es/blog/noticias/" target="_blank" rel="noopener noreferrer"
+                        title="Ir a la página de noticias."> Descubre las últimas noticias.
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+    </header>
+
+    <aside> <!-- Menú lateral -->
+
+        <nav class="menu-lateral">
+            <ul>
+                <li><button class="button_menu" onclick="alert('En construcción!')">Menú 1</button></li>
+                <li><button class="button_menu" onclick="alert('En construcción!')">Menú 2</button></li>
+                <li><button class="button_menu" onclick="alert('En construcción!')">Menú 3</button></li>
+            </ul>
+        </nav>
+
+    </aside>
+
+    <main> <!-- Zona principal -->
+
+        {% block central %}{% endblock %}
+
+    </main>
+
+    <footer> <!-- Zona del pie -->
+
+        <section class="enlaces-footer"> <!-- Parte superior del footer-->
+            <a href="https://github.com/AngelRodriguezFaya" target="_blank" rel="noopener noreferrer">Visita mi GitHub.</a>
+            <a href="https://www.santiagopontones.es/" target="_blank" rel="noopener noreferrer">Página Web del Ayuntamiento.</a>
+            <a href="" target="_blank" rel="noopener noreferrer">Aviso legal</a>        
+        </section>
+
+        <section class="copyright"> <!-- Parte inferior del footer -->
+            <p>&copy; 2026 Ángel Rodríguez Faya SIBW-ETSIIT-UGR</p>
+        </section>
+
+    </footer>
+
+    {# Bloque para el JS específico de cada página #}
+    {% block scripts_extra %}{% endblock %}
+
+</body>
+
+</html>
