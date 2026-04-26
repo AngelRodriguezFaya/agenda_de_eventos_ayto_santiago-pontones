@@ -1,0 +1,17 @@
+<!-- portada.html -->
+<!-- Página principal de la Agenda de Eventos -->
+
+{# 1. Avisar a Twig de que heredamos del archivo padre #}
+{% extends "padre.html" %}
+
+{# 2. NO sobrescribimos el título #}
+
+{# 3. Rellenamos el hueco del main #}
+{% block central %}
+    <h2>Próximos Eventos Destacados</h2>
+    
+    <div class="lista-eventos">
+        {# Aquí en el futuro harás el bucle de la BD: {% for evento in eventos %} ... #}
+        <p>Aquí irán las tarjetas de los eventos...</p>
+    </div>
+{% endblock %}
