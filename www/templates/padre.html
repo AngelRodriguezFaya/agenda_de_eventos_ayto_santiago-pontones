@@ -8,13 +8,12 @@
     {# El título puede tener un valor por defecto, pero permitimos que el hijo lo cambie #}
     <title>{% block titulo %}Agenda de Eventos - Excmo. Ayuntamiento de Santiago Pontones.{% endblock %}</title> <!-- titulo de la página -->
 
-    {# Estilos generales que comparten todas las páginas #}
-    <link rel="stylesheet" href="../css/estilos.css"> <!-- Hoja de estilo -->
-    
-    {# Dejamos un bloque por si una página concreta necesita un CSS adicional #}
-    {% block css_extra %}{% endblock %}
+    {# Estilos de la página #}
+    {% block estilos %}
+    <link rel="stylesheet" href="{{ constant('BASE_URL') }}css/estilos.css"> <!-- Hoja de estilo -->
+    {% endblock %}
 
-    <link rel="icon" type="image/xicon" href="../images/icono.ico"> <!-- icono de la ventana-->
+    <link rel="icon" type="image/xicon" href="{{ constant('BASE_URL') }}images/favicon_con_fondo.png"> <!-- icono de la ventana-->
     <meta charset="UTF-8"> <!--conjunto de caracteres utilizado -->
     <meta name="keywords" content="HTML, CSS, Santiago-Pontones"> <!-- palabras clave -->
     <meta name="author" content="Ángel Rodríguez Faya"> <!-- Autor de la página -->
@@ -27,8 +26,8 @@
     <header> <!-- Zona de encabezado -->
 
         <!-- Logo -->
-        <a href="portada.php" title="Volver a la página principal">
-            <img id="logo-principal" src="../images/logo.png" alt="Logo de la Agenda de Eventos">
+        <a href="{{ constant('BASE_URL') }}" title="Volver a la página principal">
+            <img id="logo-principal" src="{{ constant('BASE_URL') }}images/logo.png" alt="Logo de la Agenda de Eventos">
         </a>
         <!-- Nombre del sitio -->
         <span>

@@ -1,14 +1,13 @@
-<!-- evento_imprimir.html -->
-<!-- Evento de la Agenda de Eventos (Versión imprimir) -->
+{# evento_imprimir.html - Página de un Evento de la Agenda de Eventos (Versión imprimir) #}
 
 {% extends "padre.html" %}
 
-{% block css_extra %}
-    <link rel="stylesheet" href="../css/estilo_imprimir.css">
+{% block estilos %}
+    <link rel="stylesheet" href="{{ constant('BASE_URL') }}css/estilo_imprimir.css">
 {% endblock %}
 
 {% block central %}
-<article class="detalle-evento"> <!-- Zona del evento -->
+<article class="evento"> <!-- Zona del evento -->
     <header class="encabezado-evento"> <!-- Encabezado del evento -->
         <div class="titulo-fecha-evento">
             <h2 class="titulo-evento">{{ evento.titulo }}</h2>
@@ -18,27 +17,27 @@
             <ul>
                 <li>
                     <a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer" title="Ir a TikTok">
-                        <img class="icono-redes" src="../images/tik-tok.png" alt="TikTok">
+                        <img class="icono-redes" src="{{ constant('BASE_URL') }}images/icon_redes_sociales/tik-tok.png" alt="TikTok">
                     </a>
                 </li>
 
                 <li>
                     <a href="https://www.instagram.com/" target="_blank"
                         rel="noopener noreferrer" title="Ir a Instagram">
-                        <img class="icono-redes" src="../images/instagram.png" alt="Instagram">
+                        <img class="icono-redes" src="{{ constant('BASE_URL') }}images/icon_redes_sociales/instagram.png" alt="Instagram">
                     </a>
                 </li>
 
                 <li>
                     <a href="https://www.facebook.com/" target="_blank"
                         rel="noopener noreferrer" title="Ir a Facebook">
-                        <img class="icono-redes" src="../images/facebook.png" alt="Facebook">
+                        <img class="icono-redes" src="{{ constant('BASE_URL') }}images/icon_redes_sociales/facebook.png" alt="Facebook">
                     </a>
                 </li>
 
                 <li>
-                    <a href="evento_imprimir.php" target="_blank" rel="noopener noreferrer" title="Imprimir evento">
-                        <img class="icono-imprimir" src="../images/print_icon.png" alt="Imprimir página">
+                    <a href="/evento/{{ evento.id }}/imprimir" target="_blank" rel="noopener noreferrer" title="Imprimir evento">
+                        <img class="icono-imprimir" src="{{ constant('BASE_URL') }}images/print_icon.png" alt="Imprimir página">
                     </a>
                 </li>
             </ul>
@@ -46,7 +45,7 @@
     </header>
 
     <div class="zona-central-evento">
-        <div class="descripcion-evento">
+        <div class="cuerpo-evento">
             <h3>Detalles del evento</h3>
             <p><strong>Fecha de celebración:</strong> {{ evento.fecha_realizacion }}</p>
             <p><strong>Localidad:</strong> {{ evento.localidad }}</p>
@@ -55,21 +54,19 @@
             <p><strong>Descripción:</strong> {{ evento.descripcion | raw }}</p>
         </div>
 
-        {% if galeria is not empty %}
+        {% if evento.cartel %}
             <figure class="figura-evento">
-                {# Accedemos al primer elemento del array 'galeria' que pasamos desde PHP #}
-                <img class="imagen-evento" src="{{ galeria[0].ruta }}" alt="{{ galeria[0].descripcion }}">
-                <figcaption>{{ galeria[0].descripcion }}</figcaption>
+                <img class="imagen-evento" src="{{ constant('BASE_URL') }}{{ evento.cartel }}" alt="Cartel de {{ evento.titulo }}">
             </figure>
         {% endif %}
     </div>
 
     <section class="galeria-imagenes">
         <h3>Galería de imágenes</h3>
-        <div class="contenedor-imagenes">
+        <div class="imagenes-galeria">
             {# Este bucle recorre las imágenes que le pasemos desde PHP #}
             {% for imagen in galeria %}
-                <img src="{{ imagen.ruta }}" alt="{{ imagen.descripcion }}">
+                <img src="{{ constant('BASE_URL') }}{{ imagen.ruta_imagen }}" alt="{{ imagen.descripcion | default('Imagen del evento') }}">
             {% else %}
                 <p>No hay imágenes disponibles para este evento.</p>
             {% endfor %}
