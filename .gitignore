@@ -1,1 +1,7 @@
 *.pdf
+/.env
+/.vscode
+/config/*
+/logs/*
+.DS_Store
+/buildtest

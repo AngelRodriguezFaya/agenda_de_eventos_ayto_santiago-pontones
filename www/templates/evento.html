@@ -1,0 +1,146 @@
+{# evento.html - Página de un Evento de la Agenda de Eventos #}
+
+{% extends "padre.html" %}
+
+{% block titulo %}Evento: {{ evento.titulo }} - Agenda{% endblock %}
+
+{% block central %}
+<article class="evento"> <!-- Zona del evento -->
+    <header class="encabezado-evento"> <!-- Encabezado del evento -->
+        <div class="titulo-fecha-evento">
+            <h2 class="titulo-evento">{{ evento.titulo }}</h2>
+        </div>
+
+        <nav class="enlaces-evento">
+            <ul>
+                <li>
+                    <a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer" title="Ir a TikTok">
+                        <img class="icono-redes" src="{{ constant('BASE_URL') }}images/icon_redes_sociales/tik-tok.png" alt="TikTok">
+                    </a>
+                </li>
+
+                <li>
+                    <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer"
+                        title="Ir a Instagram">
+                        <img class="icono-redes" src="{{ constant('BASE_URL') }}images/icon_redes_sociales/instagram.png" alt="Instagram">
+                    </a>
+                </li>
+
+                <li>
+                    <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" title="Ir a Facebook">
+                        <img class="icono-redes" src="{{ constant('BASE_URL') }}images/icon_redes_sociales/facebook.png" alt="Facebook">
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/evento/{{ evento.id }}/imprimir" target="_blank" rel="noopener noreferrer" title="Imprimir evento">
+                        <img class="icono-imprimir" src="{{ constant('BASE_URL') }}images/print_icon.png" alt="Imprimir página">
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="zona-central-evento">
+        <div class="descripcion-evento">
+            <h3>Detalles del evento</h3>
+            <p><strong>Fecha de celebración:</strong> {{ evento.fecha_realizacion }}</p>
+            <p><strong>Localidad:</strong> {{ evento.localidad }}</p>
+            <p><strong>Categoría:</strong> {{ evento.categoria }}</p>
+
+            <p><strong>Descripción:</strong> {{ evento.descripcion | raw }}</p>
+        </div>
+
+        {% if evento.cartel %}
+        <figure class="figura-evento">
+            <img class="imagen-evento" src="{{ constant('BASE_URL') }}{{ evento.cartel }}" alt="Cartel de {{ evento.titulo }}">
+        </figure>
+        {% endif %}
+    </div>
+
+    <section class="galeria-imagenes">
+        <h3>Galería de imágenes</h3>
+        <div class="imagenes-galeria">
+            {# Este bucle recorre las imágenes que le pasemos desde PHP #}
+            {% for imagen in galeria %}
+            <img src="{{ constant('BASE_URL') }}{{ imagen.ruta_imagen }}" alt="{{ imagen.descripcion | default('Imagen del evento') }}">
+            {% else %}
+            <p>No hay imágenes disponibles para este evento.</p>
+            {% endfor %}
+        </div>
+    </section>
+</article>
+
+
+{# Zona de comentarios #}
+
+<div id="desplegar_panel_comentarios"></div>
+
+<aside id="panel_comentarios" class="oculto">
+
+    <!-- Cabacera del panel de comentarios -->
+    <div class="cabecera-panel">
+        <h3>Comentarios</h3>
+        <button id="btn-cerrar-comentarios" title="Cerrar el panel de comentarios">X</button>
+    </div>
+
+    <!-- Para añadir un comentario -->
+    <button id="btn-aniadir-comentario">Añadir un comentario</button>
+
+    <form id="form-comentario" class="oculto">
+        <h4>Introduzca los siguientes datos:</h4>
+
+        <label for="f-nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre">
+
+        <label for="f-email">E-mail:</label>
+        <input type="text" id="email" name="email">
+
+        <label for="f-texto-comentario">Comentario:</label>
+        <textarea id="texto-comentario" name="texto-comentario" rows="4"></textarea>
+
+        <!-- Botones para enviar o cancelar comentario -->
+        <button type="submit" id="btn-enviar-comentario">Enviar</button>
+        <button type="button" id="btn-cancelar-comentario">Cancelar</button>
+    </form>
+
+
+
+    <!-- Lista de comentarios de otras personas -->
+    <div id="lista-comentarios">
+        {% for comentario in comentarios %}
+        <div class="comentario">
+            <h4>{{ comentario.nombre }}</h4>
+            <p class="email-comentario">{{ comentario.email }}</p>
+            <p>{{ comentario.texto }}</p>
+            <p class="fecha-comentario">{{ comentario.fecha_hora }}</p>
+        </div>
+        {% else %}
+        <p>Aún no hay comentarios. ¡Anímate a ser el primero!</p>
+        {% endfor %}
+    </div>
+
+</aside>
+
+<!-- Creo un diálogo modal personalizado para mostrar avisos en el formulario del comentario -->
+<div id="mensaje-error" class="oculto">
+    <h5>¡Atención! Hay un error:</h5>
+    <p id="texto-error"></p>
+    <button id="btn-aceptar-msg-error">Aceptar</button>
+</div>
+
+</article>
+
+{% endblock %}
+
+{% block scripts_extra %}
+<!-- Insertamos variables dinámicas desde PHP para que JS pueda utilizarlas -->
+<script>
+    const BASE_URL = "{{ constant('BASE_URL') }}";
+    const EVENTO_ID = {{ evento.id }};
+    const localidades = {{ localidades|json_encode|raw }};
+</script>
+
+<!-- Añado el archivo de JavaScript -->
+<script src="{{ constant('BASE_URL') }}js/index.js"></script>
+{% endblock %}

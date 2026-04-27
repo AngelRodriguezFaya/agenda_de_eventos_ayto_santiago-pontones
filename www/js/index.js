@@ -18,41 +18,6 @@ const opcionesFecha = {
 };
 
 
-// Array de comentarios iniciales harcodeados
-const comentariosIniciales = [
-    {
-        nombre: "María Gómez",
-        email: "mariagm@gmail.com",
-        texto: "¡Qué ganas de participar este año! El recorrido de la edición anterior fue espectacular. Mi parte favorita fue sin duda la subida del cerro de la Matea."
-    },
-    {
-        nombre: "Carlos López",
-        email: "carloslopez@outlook.com",
-        texto: "La organización de este evento es impecable. Me encanta que hayan modalidades distintas para los que no somos corredores profesionales. ¡Nos vemos en la línea de salida!"
-    },
-    {
-        nombre: "Juan Pérez",
-        email: "juanitomtb@yahoo.com",
-        texto: "He participado en varias ediciones y cada año me sorprende la belleza del recorrido. Me encanta ir a Santiago de la Espada para disfrutar de la naturaleza y de la bici. ¡Recomiendo a todos que se animen a participar!"
-    }
-];
-
-
-// Array de 10 localidades del municipio de Santiago-Pontones.
-const localidades = [ 
-    "santiago de la espada",
-    "la matea",
-    "pontones",
-    "cerezo",
-    "cañuelos",
-    "teatinos",
-    "marchena",
-    "miller",
-    "ruices",
-    "atascaderos",
-];
-
-
 // ==========================================================================================================
 //                              FUNCIONES AUXILIARES
 // ==========================================================================================================
@@ -118,21 +83,6 @@ function crearComentario(nombre, email, texto) {
     return comentario;
 }
 
-
-// Esta función carga los comentarios iniciales que están harcodeados (ya que no tenemos BD)
-// Le pedimos que reciba el 'contenedor' para que sepa dónde tiene que pegar los comentarios
-function cargarComentariosIniciales(contenedor) {
-    // Usamos el bucle forEach para recorrer cada comentario del array
-    comentariosIniciales.forEach(function(comentario) {
-
-        // Creamos un nuevo comentario        
-        const nuevoElemento = crearComentario(comentario.nombre, comentario.email, comentario.texto);
-        
-        contenedor.appendChild(nuevoElemento); 
-    });
-}
-
-
 // Comprueba si un email es válido haciendo uso de una expresión regular.
 function esEmailValido(email) {
     /* \w en JavaScript equivale a [A-Za-z0-9_]*/
@@ -174,11 +124,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const campoNombre = document.getElementById('nombre')
     const campoEmail = document.getElementById('email');
     const campoTexto = document.getElementById('texto-comentario')
-
-
-    // ------------ Cargamos los comentarios iniciales al cargar la página -----------------
-    cargarComentariosIniciales(listaComentarios);
-    
 
     // --------- Añadimos los eventos a los elementos del DOM ------------------------------
 
@@ -257,22 +202,47 @@ document.addEventListener("DOMContentLoaded", function() {
             return; // Salimos de la función para que no se cree el comentario
         }
 
-        // Paso 4: Si todo es correcto, creamos el nuevo comentario y lo añadimos a la lista
-        const comentario = crearComentario(nombre, email, texto);
+        // Paso 4: Si todo es correcto, guardamos el comentario en la Base de Datos con AJAX (fetch)
+        const confirmacion = confirm("¿Estás seguro de que quieres añadir este comentario?"); 
+        if (!confirmacion) return; // Si no quiere, cancelamos
 
-            // Mostramos un cuadro de confirmación antes de añadir el comentario a la lista
-        const confirmacion = confirm("¿Estás seguro de que quieres añadir este comentario?"); // Mostramos un cuadro de confirmación
-        
-        if (confirmacion) { // Si es true, agregamos el comentario a la lista, si es false, no hacemos nada
-            listaComentarios.prepend(comentario); // COn prepend() añadimos el nuevo comentario al principio de la lista
-            alert("¡Comentario enviado! Gracias por tu participación."); // Mostramos un mensaje de alerta al enviar el comentario
-        }
+        // Creamos lo que le vamos a enviar al servidor de PHP en JSON
+        const datos = {
+            evento_id: EVENTO_ID,  // Viene de la constante inyectada en HTML por Twig
+            nombre: nombre,
+            email: email,
+            texto: texto
+        };
 
-        // Paso 5: Ocultamos el formulario y limpiamos los campos
-        
-        ocultarElemento(formComentario); // Ocultamos el formulario después de enviar el comentario
-        
-        limpiarEltosFormulario(labelNombre, labelEmail, labelTexto); // Limpiamos los campos del formulario
+        // Hacemos la petición POST al archivo "api_comentarios.php"
+        fetch(BASE_URL + 'api_comentarios.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(datos)
+        })
+        .then(response => response.json()) // Se queda esperando a que PHP termine de guardar los datos en MySQL y decodifique la respuesta rápida del servidor.
+        .then(data => {
+            if (data.status === "success") {
+                // i PHP nos confirma que se ha guardado bien en la base de datos sin errores, entonces llammamos a la función de crearComentario.
+                const comentario = crearComentario(nombre, email, texto);
+                listaComentarios.prepend(comentario); 
+                
+                alert("¡Comentario enviado y guardado! Gracias por tu participación.");
+
+                // Si todo ha ido bien, ocultamos y limpiamos el form
+                ocultarElemento(formComentario);
+                limpiarEltosFormulario(labelNombre, labelEmail, labelTexto);
+            } else {
+                alert("Hubo un problema al guardar el comentario: " + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error enviando comentario:', error);
+            alert("No se pudo conectar con el servidor.");
+        });
+
     });
     
 
@@ -282,7 +252,6 @@ document.addEventListener("DOMContentLoaded", function() {
         // Limpiamos los campos del formulario
         limpiarEltosFormulario(labelNombre, labelEmail, labelTexto);
     });
-
 
     // evento para ocultar el dialogo modal personalizado (para errores)
     btnAceptarError.addEventListener('click', function() {
