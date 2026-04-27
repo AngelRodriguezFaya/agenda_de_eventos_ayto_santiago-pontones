@@ -1,0 +1,11 @@
+RewriteEngine On
+
+# Si el usuario pide algo que NO es un archivo real (como imagenes o css)...
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Regla 1: Convertir /evento/5 a index.php?ev=5
+RewriteRule ^evento/([0-9]+)$ index.php?ev=$1 [L,QSA]
+
+# Regla 2: Convertir /evento/5/imprimir a index.php?ev=5&print=true
+RewriteRule ^evento/([0-9]+)/imprimir$ index.php?ev=$1&print=true [L,QSA]
