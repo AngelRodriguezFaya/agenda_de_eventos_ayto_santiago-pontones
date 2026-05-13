@@ -125,6 +125,21 @@ document.addEventListener("DOMContentLoaded", function() {
     const campoEmail = document.getElementById('email');
     const campoTexto = document.getElementById('texto-comentario')
 
+    // VARIABLES DINÁMICAS para cargar el contenido de los eventos (evento.html)
+        // Localizamos el elemento que tiene los datos
+    const elementoEvento = document.getElementById('evento-detalle');
+
+        // Si el elemento no existe (por ejemplo, estamos en la portada), salimos para no dar error
+    if (!elementoEvento) return;
+
+        // Extraemos los datos de los atributos 'data-'
+    const EVENTO_ID = elementoEvento.dataset.id;
+    const BASE_URL  = elementoEvento.dataset.urlBase
+
+        // Como las localidades son un array (JSON), hay que parsearlo
+    const localidades = JSON.parse(elementoEvento.dataset.localidades);
+    
+    
     // --------- Añadimos los eventos a los elementos del DOM ------------------------------
 
     // evento para abrir el panel de comentarios
