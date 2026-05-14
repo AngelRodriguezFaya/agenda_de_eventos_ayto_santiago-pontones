@@ -1,10 +1,18 @@
 <?php
+
+// Iniciamos las sesiones para manejar el estado del usuario
+session_start();
+
 require_once '/usr/local/lib/php/vendor/autoload.php';
 require_once 'bd.php'; // Incluimos la clase BD
 
 // 1. Configuración de Twig
 $loader = new \Twig\Loader\FilesystemLoader('templates');
 $twig = new \Twig\Environment($loader);
+
+// Pasamos la sesión como una variable global a Twig para no
+// tener que pasarla en cada renderizado
+$twig->addGlobal('session', $_SESSION);
 
 // 2. Validación y Sanitización de entradas
 // filter_input nos asegura que recibimos un entero o nos devuelve false/null

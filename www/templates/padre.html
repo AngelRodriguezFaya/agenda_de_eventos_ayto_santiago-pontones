@@ -58,6 +58,12 @@
             </ul>
         </nav>
 
+        <!-- Información del usuario -->
+        {% if session.nick %}
+            <p>Hola, {{ session.nick }} ({{ session.rol }})</p>
+        {% else %}
+            <p>Hola, usuario anónimo</p>
+        {% endif %}
     </header>
 
     <aside id="aside-lateral"> <!-- Menú lateral -->
