@@ -95,13 +95,13 @@ header { /* Selector de elemento */
 
 /* ------------------------- ASIDE ----------------------------------- */
 
-aside  { 
+#aside-lateral { /* Selector de ID */
     grid-area: sidebar;
     background-color: rgba(248, 245, 230, 0.65);
     border-radius: 7px;
 }
 
-aside ul { /* Selector descendente */
+#aside-lateral ul { /* Selector descendente */
     list-style: none;
     padding: 0;
     margin: 0;
@@ -464,9 +464,10 @@ article.evento .galeria-imagenes h3 {
     position: fixed; /* Para que se quede fijo en la pantalla al hacer scroll */
     top: 0;
     right: 0;
-    width: 10px;    /* Ancho del área sensible para desplegar el panel */
+    width: 15px;    /* Ancho del área sensible para desplegar el panel */
     height: 100vh;  /* Para que ocupe toda la altura de la pantalla */ 
     z-index: 99;    /* Para que esté por encima de otros elementos pero por debajo del panel de comentarios */
+    /* background-color: red;*/ /*Solo para visualizar el área sensible, luego se puede quitar o hacer transparente */
 }
 
 /* El panel lateral principal */
