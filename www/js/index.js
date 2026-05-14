@@ -125,6 +125,25 @@ document.addEventListener("DOMContentLoaded", function() {
     const campoEmail = document.getElementById('email');
     const campoTexto = document.getElementById('texto-comentario')
 
+    // Para las variables dinámicas guardadas en la BD
+
+        // 1. Localizamos el elemento que tiene los datos
+    const elementoEvento = document.getElementById('evento-detalle');
+
+        // 2. Si el elemento no existe, salimos para no dar error
+    if (!elementoEvento) return;
+
+        // 3. Extraemos los datos de los atributos 'data-'
+    const EVENTO_ID = elementoEvento.dataset.id;
+    const BASE_URL  = elementoEvento.dataset.urlBase;
+    
+        // Como las localidades son un array (JSON), lo parsearmos
+    const localidades = JSON.parse(elementoEvento.dataset.localidades);
+
+        // Para depurar, mostramos por consola los datos que hemos extraído
+    console.log("Cargado evento:", EVENTO_ID);
+    console.log("Localidades para resaltar:", localidades);
+
     // --------- Añadimos los eventos a los elementos del DOM ------------------------------
 
     // evento para abrir el panel de comentarios

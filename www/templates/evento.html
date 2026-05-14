@@ -5,7 +5,13 @@
 {% block titulo %}Evento: {{ evento.titulo }} - Agenda{% endblock %}
 
 {% block central %}
-<article class="evento"> <!-- Zona del evento -->
+<!-- Zona del evento -->
+<article class="evento" 
+        id="evento-detalle"
+        data-id="{{ evento.id }}"
+        data-url-base="{{ constant('BASE_URL') }}"
+        data-localidades="{{ localidades|json_encode|e('html_attr') }}">
+
     <header class="encabezado-evento"> <!-- Encabezado del evento -->
         <div class="titulo-fecha-evento">
             <h2 class="titulo-evento">{{ evento.titulo }}</h2>
@@ -131,12 +137,12 @@
 {% endblock %}
 
 {% block scripts_extra %}
-<!-- Insertamos variables dinámicas desde PHP para que JS pueda utilizarlas -->
+<!-- Insertamos variables dinámicas desde PHP para que JS pueda utilizarlas
 <script>
     const BASE_URL = "{{ constant('BASE_URL') }}";
     const EVENTO_ID = {{ evento.id }};
     const localidades = {{ localidades|json_encode|raw }};
-</script>
+</script> -->
 
 <!-- Añado el archivo de JavaScript -->
 <script src="{{ constant('BASE_URL') }}js/index.js"></script>
