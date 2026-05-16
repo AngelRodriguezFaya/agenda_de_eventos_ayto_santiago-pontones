@@ -89,26 +89,35 @@
         <button id="btn-cerrar-comentarios" title="Cerrar el panel de comentarios">X</button>
     </div>
 
-    <!-- Para añadir un comentario -->
-    <button id="btn-aniadir-comentario">Añadir un comentario</button>
+    {% if session.nick %} <!-- Si el usuario ha iniciado sesión, puede añadir un comentario -->
 
-    <form id="form-comentario" class="oculto">
-        <h4>Introduzca los siguientes datos:</h4>
+        <!-- Para añadir un comentario -->
+        <button id="btn-aniadir-comentario">Añadir un comentario</button>
 
-        <label for="f-nombre">Nombre:</label>
-        <input type="text" id="nombre" name="nombre">
+        <form id="form-comentario" class="oculto">
+            <h4>Introduzca los siguientes datos:</h4>
 
-        <label for="f-email">E-mail:</label>
-        <input type="text" id="email" name="email">
+            <label for="f-nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre">
 
-        <label for="f-texto-comentario">Comentario:</label>
-        <textarea id="texto-comentario" name="texto-comentario" rows="4"></textarea>
+            <label for="f-email">E-mail:</label>
+            <input type="text" id="email" name="email">
 
-        <!-- Botones para enviar o cancelar comentario -->
-        <button type="submit" id="btn-enviar-comentario">Enviar</button>
-        <button type="button" id="btn-cancelar-comentario">Cancelar</button>
-    </form>
+            <label for="f-texto-comentario">Comentario:</label>
+            <textarea id="texto-comentario" name="texto-comentario" rows="4"></textarea>
 
+            <!-- Botones para enviar o cancelar comentario -->
+            <button type="submit" id="btn-enviar-comentario">Enviar</button>
+            <button type="button" id="btn-cancelar-comentario">Cancelar</button>
+        </form>
+    
+    {% else %}
+            
+        <div class="aviso-login-comentarios">
+            <p>⚠️ Debes <strong>iniciar sesión</strong> en el menú superior para poder escribir un comentario.</p>
+        </div>
+
+    {% endif %}
 
 
     <!-- Lista de comentarios de otras personas -->
@@ -134,16 +143,4 @@
     <button id="btn-aceptar-msg-error">Aceptar</button>
 </div>
 
-{% endblock %}
-
-{% block scripts_extra %}
-<!-- Insertamos variables dinámicas desde PHP para que JS pueda utilizarlas
-<script>
-    const BASE_URL = "{{ constant('BASE_URL') }}";
-    const EVENTO_ID = {{ evento.id }};
-    const localidades = {{ localidades|json_encode|raw }};
-</script> -->
-
-<!-- Añado el archivo de JavaScript -->
-<!-- <script src="{{ constant('BASE_URL') }}js/index.js"></script> -->
 {% endblock %}

@@ -21,7 +21,7 @@
     <meta name="robots" content="index"> <!-- Para aperecer en el buscador -->
 </head>
 
-<body> 
+<body data-base-url="{{ constant('BASE_URL') }}">
 
     <header> <!-- Zona de encabezado -->
 
@@ -39,10 +39,10 @@
             <!-- Información del usuario -->
             <div class="zona-usuario">
                 {% if session.nick %}
-                    <p>Hola 👋, {{ session.nick }} ({{ session.rol }})</p>
+                    <p>Hola! 👋 {{ session.nick }} ({{ session.rol }})</p>
                     <button id="btn-logout" class="button_menu">Cerrar sesión</button>
                 {% else %}
-                    <p>Hola 👋, usuario anónimo</p>
+                    <p>Hola! 👋 usuario anónimo</p>
                     <button id="btn-abrir-login" class="button_menu btn-login">Iniciar sesión</button>
                 {% endif %}
             </div>

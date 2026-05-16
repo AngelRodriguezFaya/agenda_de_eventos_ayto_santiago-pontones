@@ -806,3 +806,15 @@ article.evento .galeria-imagenes h3 {
 #btn-aceptar-msg-error:hover {
     background-color: #173d7a; /* Un azul un poco más oscuro al pasar el ratón */
 }
+
+/* Aviso en comentarios para usuarios anónimos */
+.aviso-login-comentarios {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 14px;
+}

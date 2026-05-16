@@ -17,6 +17,9 @@ const opcionesFecha = {
     minute: '2-digit' 
 };
 
+// Obtenemos la URL base 
+const BASE_URL = document.body.dataset.baseUrl || '/';
+
 
 // ==========================================================================================================
 //                              FUNCIONES AUXILIARES
@@ -148,7 +151,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             try {
                 // Enviamos los datos al servidor y "esperamos" (await) la respuesta HTTP
-                const respuesta = await fetch('api_login.php', {
+                const respuesta = await fetch(BASE_URL + 'api_login.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ nick: nickValor, password: passwordValor })
@@ -184,7 +187,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             // Llamamos al archivo de PHP de logout
             try{
-                const respuesta = await fetch('api_logout.php');
+                const respuesta = await fetch(BASE_URL + 'api_logout.php');
 
                 if (respuesta.ok) {
                     window.location.reload(); // Recargamos la página para que TWIG detecte que ya no hay $_SESSION
