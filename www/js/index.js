@@ -34,8 +34,8 @@ function ocultarElemento(elemento) {
 }
 
 
-// Limpia los campos del formulario y resetea los labels a su estado original
-function limpiarEltosFormulario(lNombre, lEmail, lTexto) {
+// Limpia los campos del formulario de los comentarios y resetea los labels a su estado original
+function limpiarEltosFormularioComen(lNombre, lEmail, lTexto) {
     document.getElementById('nombre').value = '';
     document.getElementById('email').value = '';
     document.getElementById('texto-comentario').value = '';
@@ -97,6 +97,48 @@ function esEmailValido(email) {
 
 // Nos aseguramos de que el DOM esté completamente cargado antes de ejecutar nuestro código
 document.addEventListener("DOMContentLoaded", function() {
+
+    // ====================================================================
+    //                  1. CÓDIGO GLOBAL.
+    // ====================================================================
+
+    // --------------------------------------------------------------------
+    //      GESTIÓN DEL MODAL DE LOGIN (Funciona en todas las páginas)
+    // --------------------------------------------------------------------
+    const btnAbrirLogin = document.getElementById('btn-abrir-login');
+    const modalLogin = document.getElementById('modal-login');
+    const btnCerrarLogin = document.getElementById('btn-cerrar-login');
+
+    // ABRIR EL MODAL DE LOGIN
+    // Sólo añadimos el evento si el botón existe (si el usuario no ha iniciado sesión)
+    if(btnAbrirLogin && modalLogin){
+        btnAbrirLogin.addEventListener('click', function() {
+            // mostrarElemento(modalLogin);
+            modalLogin.classList.remove('oculto'); 
+        });
+    }
+
+    // CERRAR EL MODAL DE LOGIN 
+    // Igual, solo añadimos el evento si el botón existe
+    if(btnCerrarLogin && modalLogin){
+        btnCerrarLogin.addEventListener('click', function() {
+            // ocultarElemento(modalLogin);
+            modalLogin.classList.add('oculto');
+            // Limpiamos los campos del formulario de login
+            document.getElementById('login-nick').value = '';
+            document.getElementById('login-password').value = '';
+            document.getElementById('login-error-msg').style.display = 'none'; // Ocultamos el mensaje de error si estaba visible
+        });
+    }
+
+
+    // ====================================================================
+    //                  2. CÓDIGO ESPECÍFICO.
+    // ====================================================================
+
+    // --------------------------------------------------------------------
+    //     GESTIÓN DE LOS COMENTARIOS (Sólo en evento.html)
+    // --------------------------------------------------------------------
 
     // -------- En primer lugar, capturamos los elementos del DOM -----------------------
     // Elementos relacionados con la apertura/cierre del panel de comentarios
@@ -252,7 +294,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 // Si todo ha ido bien, ocultamos y limpiamos el form
                 ocultarElemento(formComentario);
-                limpiarEltosFormulario(labelNombre, labelEmail, labelTexto);
+                limpiarEltosFormularioComen(labelNombre, labelEmail, labelTexto);
             } else {
                 alert("Hubo un problema al guardar el comentario: " + data.message);
             }
@@ -269,7 +311,7 @@ document.addEventListener("DOMContentLoaded", function() {
     btnCancelarComentario.addEventListener('click', function() {
         ocultarElemento(formComentario); // Ocultamos el formulario
         // Limpiamos los campos del formulario
-        limpiarEltosFormulario(labelNombre, labelEmail, labelTexto);
+        limpiarEltosFormularioComen(labelNombre, labelEmail, labelTexto);
     });
 
     // evento para ocultar el dialogo modal personalizado (para errores)

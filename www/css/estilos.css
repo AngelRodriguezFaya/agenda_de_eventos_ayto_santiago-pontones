@@ -1,7 +1,5 @@
 /* estilos.css */
 
-
-
 /* ==========================================================================
    ESTILOS GENERALES
    ========================================================================== */
@@ -10,11 +8,14 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Regla general para ocultar elementos */
+.oculto {
+    display: none !important; 
+}
+
 body {
     /* Le decimos al body que funcione como una cuadrícula */
     display: grid; 
-
-    
 
     /* Imagen de fondo */
     background-image: url("../images/Santiago_de_la_Espada.jpeg");
@@ -76,22 +77,166 @@ header { /* Selector de elemento */
 
 .menu-cabecera { /* Selector de clase */
     list-style: none;
-    /* Para que no ocupe espacio extra invisible por los márgenes/paddings */
-    padding: 0;
-    margin: 0;
-
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 10px;
+    padding: 0;
+    margin: 0;
+    align-items: center;  
 }
 
-.menu-cabecera a { /* Para darle estilo a los enlaces del menú de cabecera */
-    font-size: 90%;
-    color: #2052a2;
-    text-decoration: none; /* Para quitar el subrayado de los enlaces */
-    padding: 10px 20px; /* Relleno interior. 10px arriba/abajo, 20px a los lados */;
+.menu-cabecera li a.button_menu { /* Para darle estilo a los enlaces del menú de cabecera */
+    text-decoration: none; /* Quitamos el subrayado del enlace */
+    display: inline-block;
 }
 
+/* Información del usuario */
+.zona-usuario {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.zona-usuario p {
+    margin: 5px 0;
+}
+
+.zona-usuario .button_menu{
+    padding: 5px 12px !important;   /* Relleno muy pequeño arriba/abajo y lados */
+    font-size: 12px !important;     /* Letra un punto más pequeña que los otros */
+    
+    /* Quitamos el comportamiento de estirarse y definimos un ancho mínimo muy pequeño */
+    min-width: 110px !important; 
+    width: auto !important;         /* Evita que flexbox lo obligue a expandirse */
+    
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+/* --- Ajuste de tamaño para los botones que están DENTRO del header --- */
+header .button_menu {
+    padding: 6px 14px;
+    font-size: 13px;
+    text-decoration: none;
+    
+    /* Convertimos el propio botón en un contenedor Flex para centrar el texto */
+    display: inline-flex;
+    justify-content: center; /* Centra el texto horizontalmente */
+    align-items: center;     /* Centra el texto verticalmente */
+    text-align: center;
+    
+    /* Definimos un ancho mínimo común para que todos midan lo mismo */
+    min-width: 210px; 
+    box-sizing: border-box; /* Asegura que el padding no rompa el ancho mínimo */
+    transition: background-color 0.2s ease; /* Transición suave al pasar el ratón */
+}
+
+/* --- Botón de login --- */
+/* Tiene un estilo "invertido" al del resto de botones para destacar más */
+.button_menu.btn-login {
+    background-color: white !important;
+    color: #007bff !important; /* El azul que usas en button_menu */
+    font-weight: bold;
+}
+
+.button_menu.btn-login:hover {
+    background-color: rgb(163, 206, 250) !important;
+    color: white !important;
+}
+
+/* --- Modal de Login --- */
+#modal-login {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Fondo oscuro semitransparente que cubre TODA la pantalla */
+    background-color: rgba(0, 0, 0, 0.7); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+/* Cuando el modal tiene la clase oculto, desaparece */
+#modal-login.oculto {
+    display: none;
+}
+
+.contenido-modal {
+    background-color: white; /* Cambiado de #2f2f2f a blanco */
+    color: #333;            /* Texto oscuro para que se lea en blanco */
+    padding: 30px;
+    width: 320px;
+    border: 1px solid #ccc; /* Un borde más sutil que el blanco anterior */
+    text-align: center;
+    box-shadow: 0 5px 15px black;
+}
+
+.contenido-modal h3 {
+    color: #007bff;
+    margin-top: 0;
+}
+
+.campo-formulario-login label {
+    display: block;
+    margin-bottom: 5px;
+    text-align: left;
+    color: #555;
+}
+
+.campo-formulario-login input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9; /* gris claro para el fondo del input */
+}
+
+.campo-formulario-login {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+/* Texto de error */
+.error-texto {
+    color: #ff4d4d;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+}
+
+.error-texto.oculto {
+    display: none;
+}
+
+/* Botones del modal */
+.botones-modal {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.btn-primario, .btn-secundario {
+    padding: 8px 20px;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-primario {
+    background-color: #28a745; /* Verde éxito */
+    color: white;
+}
+
+.btn-secundario {
+    background-color: #dc3545; /* Rojo peligro */
+    color: white;
+}
 
 /* ------------------------- ASIDE ----------------------------------- */
 
