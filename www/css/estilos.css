@@ -818,3 +818,63 @@ article.evento .galeria-imagenes h3 {
     text-align: center;
     font-size: 14px;
 }
+
+/* ==========================================================================
+    PÁGINA DE PERFIL DE USUARIO - PRÁCTICA 4    
+   ========================================================================== */
+/* Estilos para la sección de Perfil */
+.contenedor-perfil {
+    max-width: 500px;
+    margin: 40px auto;
+    background-color: rgb(137, 137, 137);
+    padding: 30px;
+    border-radius: 8px;
+    color: #fff;
+    border: 1px solid #444;
+}
+
+.campo-formulario, .campo-formulario-password {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.campo-formulario label, .campo-formulario-password label {
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.campo-formulario input, .campo-formulario-password input {
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #666;
+    background-color: #222;
+    color: #fff;
+}
+
+.ayuda-input {
+    color: #c3c3c3;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.alerta-exito {
+    background-color: #28a745;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.alerta-error {
+    background-color: #dc3545;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.botones-perfil {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+}
+

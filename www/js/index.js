@@ -5,6 +5,9 @@
 //                          CONSTANTES Y DATOS INICIALES
 // ==========================================================================================================
 
+// Obtenemos la URL base 
+const BASE_URL = document.body.dataset.baseUrl || '/';
+
 const OCULTO_CLASS = 'oculto'; // Clase que indica que un elemento se debe ocultar
 
 // Opciones para formatear la fecha y hora en español
@@ -16,9 +19,6 @@ const opcionesFecha = {
     hour: '2-digit', 
     minute: '2-digit' 
 };
-
-// Obtenemos la URL base 
-const BASE_URL = document.body.dataset.baseUrl || '/';
 
 
 // ==========================================================================================================
@@ -244,7 +244,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // 3. Extraemos los datos de los atributos 'data-'
     const EVENTO_ID = elementoEvento.dataset.id;
-    const BASE_URL  = elementoEvento.dataset.urlBase;
+    // Ya no re-declaramos BASE_URL para evitar conflictos de "Temporal Dead Zone", usamos la global
     
         // Como las localidades son un array (JSON), lo parsearmos
     const localidades = JSON.parse(elementoEvento.dataset.localidades);

@@ -142,4 +142,27 @@ class BD {
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    /**
+     * Actualiza los datos de perfil de un usuario.
+     * Si la contraseña no está vacía, la cifra y la actualiza.
+     */
+    public static function actualizarPerfil($id, $nick, $email, $passwordNueva = null) {
+        $db = self::conectar();
+        try {
+            if (!empty($passwordNueva)) {
+                // Si el usuario ha escrito una nueva contraseña, la ciframos con password_hash
+                $hash = password_hash($passwordNueva, PASSWORD_DEFAULT);
+                $stmt = $db->prepare("UPDATE usuarios SET nick = ?, email = ?, password = ? WHERE id = ?");
+                return $stmt->execute([$nick, $email, $hash, $id]);
+            } else {
+                // Si la deja en blanco, mantenemos la contraseña que ya tenía sin tocarla
+                $stmt = $db->prepare("UPDATE usuarios SET nick = ?, email = ? WHERE id = ?");
+                return $stmt->execute([$nick, $email, $id]);
+            }
+        } catch (PDOException $e) {
+            error_log("Error en actualizarPerfil: " . $e->getMessage());
+            return false;
+        }
+    }
 }
