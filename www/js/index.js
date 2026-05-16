@@ -132,6 +132,70 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
 
+    // --------------------------------------------------------------------
+    //          PROCESAMIENTO DEL LOGIN (INICIO DE SESIÓN) CON AJAX
+    // --------------------------------------------------------------------
+
+    const formLogin = document.getElementById('form-login');
+    const mensajeErrorLogin = document.getElementById('login-error-msg');
+
+    if(formLogin) {
+        formLogin.addEventListener('submit', async function(event) {
+            event.preventDefault(); // Evitamos que el formulario recargue la página al hacer submit
+
+            const nickValor = document.getElementById('login-nick').value.trim();
+            const passwordValor = document.getElementById('login-password').value.trim();
+
+            try {
+                // Enviamos los datos al servidor y "esperamos" (await) la respuesta HTTP
+                const respuesta = await fetch('api_login.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nick: nickValor, password: passwordValor })
+                });
+
+                // Si el servidor responde con un código de éxito (ej. 200 OK)
+                if (respuesta.ok) {
+                    // Recargamos la página para que Twig detecte la nueva $_SESSION y pinte el header con el usuario logueado
+                    window.location.reload();
+                } else {
+                    // Si el servidor responde con un error (ej. 401), mostramos el mensaje de error
+                    if (mensajeErrorLogin) {
+                        mostrarElemento(mensajeErrorLogin);
+                        mensajeErrorLogin.style.display = 'block'; // Nos aseguramos de que sea visible
+                    }
+                }
+            } catch (error) {
+                // Si hay un problema de red o el archivo PHP no existe, atrapamos el error aquí
+                console.error('Erro en la petición de login:', error);
+            }
+        });
+    }
+
+
+    // --------------------------------------------------------------------
+    //          PROCESAMIENTO DEL LOGOUT (CIERRE DE SESIÓN)
+    // --------------------------------------------------------------------
+    const btnLogout = document.getElementById('btn-logout');
+
+    if(btnLogout) {
+        btnLogout.addEventListener('click', async function(evento) {
+            evento.preventDefault(); // Evitamos que el enlace recargue la página
+
+            // Llamamos al archivo de PHP de logout
+            try{
+                const respuesta = await fetch('api_logout.php');
+
+                if (respuesta.ok) {
+                    window.location.reload(); // Recargamos la página para que TWIG detecte que ya no hay $_SESSION
+                }
+            }catch(error) {
+                console.error('Error en la petición de logout:', error);
+            }
+        });
+    }
+
+
     // ====================================================================
     //                  2. CÓDIGO ESPECÍFICO.
     // ====================================================================

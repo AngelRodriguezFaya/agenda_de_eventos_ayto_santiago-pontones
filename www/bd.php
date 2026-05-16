@@ -107,24 +107,32 @@ class BD {
      * Si el usuario existe y la contraseña es correcta, devuelve un array con los datos del usuario (id, nick, email).
      * Si no existe, devuelve false.
      */
-    public static function comprobarLogin($nick, $password) {
+    public static function comprobarLogin($nick, $passwordInput) {
         $db = self::conectar();
-        
-        // Paso 1: Buscar al usuario en la BD por su nick
-        $stmt = $db->prepare("SELECT id, nick, email, password_hash FROM usuarios WHERE nick = ?");
-        $stmt->execute([$nick]);
-        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Paso 2: Si el usuario existe y la contraseña es correcta...
-        if ($usuario && password_verify($password, $usuario['password_hash'])) {
-            // Devolvemos los datos del usuario (sin el hash, por seguridad)
-            unset($usuario['password_hash']); 
-            return $usuario;
+        try {
+            // Paso 1: Buscar al usuario en la BD por su nick
+            $stmt = $db->prepare("SELECT id, nick, email, password, rol FROM usuarios WHERE nick = ?");
+            $stmt->execute([$nick]);
+            $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // Paso 2: Si el usuario existe y la contraseña es correcta...
+            if ($usuario && password_verify($passwordInput, $usuario['password'])) {            // Devolvemos los datos del usuario (sin el hash, por seguridad)
+                // Devolvemos los datos del usuario (sin el hash, por seguridad)
+                unset($usuario['password']); 
+                return $usuario;
+            }
+
+            return false; // Si falla la contraseña o el nick no existe
+    
+        }catch (PDOException $e) {
+            // Si hay un error SQL lo imprimimos en el log del servidor
+            error_log("Error en comprobarLogin: " . $e->getMessage());
+            return false;
         }
-
-        return false;
     }
 
+    
     /**
      * Devuelve los datos de un usuario por su ID.
      */

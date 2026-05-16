@@ -55,7 +55,7 @@ header { /* Selector de elemento */
     justify-content: space-evenly;
     align-items: center;
     align-content: stretch;
-    gap: 30px;
+    gap: 20px;
 }
 
 #logo-principal { /* Selector de ID */
@@ -79,7 +79,7 @@ header { /* Selector de elemento */
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 5px;
     padding: 0;
     margin: 0;
     align-items: center;  
@@ -612,7 +612,7 @@ article.evento .galeria-imagenes h3 {
     width: 15px;    /* Ancho del área sensible para desplegar el panel */
     height: 100vh;  /* Para que ocupe toda la altura de la pantalla */ 
     z-index: 99;    /* Para que esté por encima de otros elementos pero por debajo del panel de comentarios */
-    /* background-color: red;*/ /*Solo para visualizar el área sensible, luego se puede quitar o hacer transparente */
+    /* background-color: red; Solo para visualizar el área sensible, luego se puede quitar o hacer transparente */
 }
 
 /* El panel lateral principal */
@@ -635,7 +635,7 @@ article.evento .galeria-imagenes h3 {
     overflow-y: auto;
     
     /* Animación suave al entrar/salir */
-    transition: transform 0.4s ease-in-out; 
+    transition: transform 0.4s ease-in-out !important; 
 }
 
 /* La clase 'oculto' (Indica si el panel se encuentra oculto) */
