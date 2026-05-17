@@ -1472,3 +1472,142 @@ article.evento .galeria-imagenes h3 {
 .btn-eliminar-usuario:hover {
     background-color: #bd2130 !important;
 }
+
+/* ==========================================================================
+    PANTALLA DE REGISTRO DE USUARIOS
+   ========================================================================== */
+
+/* Centramos el formulario para que no ocupe toda la pantalla */
+.contenedor-registro {
+    max-width: 500px;
+    margin: 40px auto;
+}
+
+/* Cajas de mensajes de estado */
+.alerta-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px 15px;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.alerta-exito {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 20px;
+    border: 1px solid #c3e6cb;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* ==========================================================================
+    ZONA DE GESTIÓN DE HASHTAGS
+   ========================================================================== */
+
+/* Bloque contenedor del formulario de creación */
+.bloque-crear-hashtag {
+    background-color: rgba(248, 245, 230);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 25px;
+}
+
+.bloque-crear-hashtag h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333333;
+    font-size: 16px;
+}
+
+/* Formulario inline para que el input y el botón se alineen juntos */
+.form-lineal-hashtag {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Grupo del input que incluye el símbolo '#' visual */
+.grupo-input-hashtag {
+    display: flex;
+    align-items: center;
+    background-color: #f8f9fa;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    padding-left: 12px;
+    flex-grow: 1;
+    max-width: 400px;
+}
+
+.prefijo-hashtag {
+    font-size: 18px;
+    font-weight: bold;
+    color: #888888;
+    user-select: none; /* Evita que el usuario seleccione el '#' por error */
+}
+
+.grupo-input-hashtag input {
+    border: none;
+    background: transparent;
+    padding: 10px 8px;
+    font-size: 15px;
+    width: 100%;
+    outline: none; /* Elimina el borde azul por defecto al hacer foco */
+}
+
+/* Botón específico para añadir etiquetas */
+.btn-anadir-hashtag {
+    padding: 11px 20px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Contenedor de la tabla */
+.zona-tabla-hashtags {
+    background: rgba(248, 245, 230);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilización visual del hashtag dentro de la tabla */
+.tag-hashtag-visual {
+    background-color: #e8f4fd;
+    color: #1da1f2;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 14px;
+    border: 1px solid #d2e9fb;
+    display: inline-block;
+}
+
+/* Botón de eliminar con color de peligro profesional (Rojo) */
+.btn-eliminar-hashtag {
+    background-color: #d9534f;
+    color: #ffffff !important; /* Fuerza la letra blanca */
+    text-decoration: none !important;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: bold;
+    display: inline-block;
+    transition: background-color 0.2s ease;
+}
+
+.btn-eliminar-hashtag:hover {
+    background-color: #c9302c;
+}
+
+/* Mensaje cuando la tabla no tiene elementos */
+.tabla-vacia {
+    padding: 30px !important;
+    text-align: center;
+    color: #777777;
+    font-style: italic;
+}

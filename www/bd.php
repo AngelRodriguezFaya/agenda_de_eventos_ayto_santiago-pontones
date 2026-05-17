@@ -263,6 +263,73 @@ class BD {
         return true;
     }
 
+
+    // ========================================================================
+    //                      GESTIÓN DE HASHTAGS
+    // ========================================================================
+
+    /**
+     * Obtiene todos los hashtags del sistema.
+     */
+    public static function getTodosLosHashtags() {
+        $db = self::conectar();
+        try {
+            $stmt = $db->query("SELECT id, etiqueta FROM hashtags ORDER BY etiqueta ASC");
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error en getTodosLosHashtags: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Comprueba si un hashtag ya existe para evitar duplicados.
+     */
+    public static function existeHashtag($etiqueta) {
+        $db = self::conectar();
+        try {
+            $stmt = $db->prepare("SELECT id FROM hashtags WHERE etiqueta = ?");
+            $stmt->execute([$etiqueta]);
+            return $stmt->fetch(PDO::FETCH_ASSOC) !== false;
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Inserta un nuevo hashtag.
+     */
+    public static function insertarHashtag($etiqueta) {
+        $db = self::conectar();
+        try {
+            // // Nos aseguramos de guardarlo siempre con el # delante y en minúsculas
+            // $etiqueta = strtolower(trim($etiqueta));
+            // if (strpos($etiqueta, '#') !== 0) {
+            //     $etiqueta = '#' . $etiqueta;
+            // }
+
+            $stmt = $db->prepare("INSERT INTO hashtags (etiqueta) VALUES (?)");
+            return $stmt->execute([$etiqueta]);
+        } catch (PDOException $e) {
+            error_log("Error al insertar hashtag: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Borra un hashtag por su ID.
+     */
+    public static function borrarHashtag($id) {
+        $db = self::conectar();
+        try {
+            $stmt = $db->prepare("DELETE FROM hashtags WHERE id = ?");
+            return $stmt->execute([$id]);
+        } catch (PDOException $e) {
+            error_log("Error al borrar hashtag: " . $e->getMessage());
+            return false;
+        }
+    }
+
     // ========================================================================
     //                      GESTIÓN DE COMENTARIOS
     // ========================================================================
