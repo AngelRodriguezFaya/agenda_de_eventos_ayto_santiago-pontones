@@ -391,19 +391,19 @@ class BD {
     /**
      * Registra un nuevo usuario en la BD con su nick, email y contraseña.
      * La contraseña se almacena como un hash seguro usando password_hash().
+     * El rol se asigna como 'registrado' por defecto.
      * Devuelve true si el registro fue exitoso, false si hubo un error (por ejemplo, nick o email ya existe).
      */
     public static function registrarUsuario($nick, $email, $password) {
         $db = self::conectar();
-        
-        // Creamos el hash de la contraseña
-        $password_hash = password_hash($password, PASSWORD_DEFAULT);
-
         try {
-            $stmt = $db->prepare("INSERT INTO usuarios (nick, email, password_hash) VALUES (?, ?, ?)");
-            return $stmt->execute([$nick, $email, $password_hash]);
+            // Cifrado obligatorio de contraseña (password_hash)
+            $hash = password_hash($password, PASSWORD_DEFAULT);
+            $stmt = $db->prepare("INSERT INTO usuarios (nick, email, password, rol) VALUES (?, ?, ?, 'registrado')");
+            return $stmt->execute([$nick, $email, $hash]);
         } catch (PDOException $e) {
-            return false; 
+            error_log("Error al registrar usuario: " . $e->getMessage());
+            return false;
         }
     }
 
@@ -472,5 +472,90 @@ class BD {
         }
     }
 
-    
+    /**
+     * Comprueba si ya existe un usuario con el mismo nick o email.
+     */
+    public static function existeUsuario($nick, $email) {
+        $db = self::conectar();
+        $stmt = $db->prepare("SELECT COUNT(*) FROM usuarios WHERE nick = ? OR email = ?");
+        $stmt->execute([$nick, $email]);
+        return (int)$stmt->fetchColumn() > 0;
+    }
+
+
+    // ========================================================================
+    //               GESTIÓN DE USUARIOS (SUPERUSUARIO)
+    // ========================================================================
+
+    /**
+     * Devuelve una lista con todos los usuarios registrados en el sistema.
+     */
+    public static function getTodosLosUsuarios() {
+        $db = self::conectar();
+        try {
+            $stmt = $db->query("SELECT id, nick, email, rol FROM usuarios ORDER BY id ASC");
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error en getTodosLosUsuarios: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Devuelve todos los datos de un usuario (incluido el rol) para el Superusuario.
+     */
+    public static function getUsuarioCompleto($id) {
+        $db = self::conectar();
+        try {
+            $stmt = $db->prepare("SELECT id, nick, email, rol FROM usuarios WHERE id = ?");
+            $stmt->execute([$id]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error en getUsuarioCompleto: " . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Actualiza los datos y el rol de un usuario (Función exclusiva del Superusuario).
+     */
+    public static function actualizarUsuarioPorSuperusuario($id, $nick, $email, $rol, $passwordNueva = null) {
+        $db = self::conectar();
+        try {
+            if (!empty($passwordNueva)) {
+                $hash = password_hash($passwordNueva, PASSWORD_DEFAULT);
+                $stmt = $db->prepare("UPDATE usuarios SET nick = ?, email = ?, rol = ?, password = ? WHERE id = ?");
+                return $stmt->execute([$nick, $email, $rol, $hash, $id]);
+            } else {
+                $stmt = $db->prepare("UPDATE usuarios SET nick = ?, email = ?, rol = ? WHERE id = ?");
+                return $stmt->execute([$nick, $email, $rol, $id]);
+            }
+        } catch (PDOException $e) {
+            error_log("Error en actualizarUsuarioPorSuperusuario: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Cuenta cuántos superusuarios hay registrados en el sistema.
+     */
+    public static function contarSuperusuarios() {
+        $db = self::conectar();
+        $stmt = $db->query("SELECT COUNT(*) FROM usuarios WHERE rol = 'superusuario'");
+        return (int)$stmt->fetchColumn();
+    }
+
+    /**
+     * Elimina un usuario por su ID.
+     */
+    public static function borrarUsuario($id) {
+        $db = self::conectar();
+        try {
+            $stmt = $db->prepare("DELETE FROM usuarios WHERE id = ?");
+            return $stmt->execute([$id]);
+        } catch (PDOException $e) {
+            error_log("Error al borrar usuario: " . $e->getMessage());
+            return false;
+        }
+    }
 }

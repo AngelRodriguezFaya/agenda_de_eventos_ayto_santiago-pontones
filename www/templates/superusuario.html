@@ -1,0 +1,58 @@
+{# templates/superusuario.html #}
+{% extends "padre.html" %}
+
+{% block titulo %}Panel de Control de Usuarios - Superusuario{% endblock %}
+
+{% block central %}
+<section class="contenedor-gestor">
+    <h2>Panel de Control de Usuarios</h2>
+    <p>Visualiza y administra los roles de todos los usuarios registrados en el sistema.</p>
+    
+    <div class="zona-tabla-usuarios">
+        <table class="tabla-administracion">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nick</th>
+                    <th>Email</th>
+                    <th>Rol Actual</th>
+                    <th class="celda-centrada">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for usuario in usuarios %}
+                    <tr>
+                        <td>{{ usuario.id }}</td>
+                        <td class="nick-usuario">{{ usuario.nick }}</td>
+                        <td>{{ usuario.email }}</td>
+                        <td>
+                            {# Asignamos la clase del color dinámicamente con Twig #}
+                            <span class="rol-tag rol-{{ usuario.role|default(usuario.rol) }}">
+                                {{ usuario.rol|upper }}
+                            </span>
+                        </td>
+                        <td class="celda-centrada">
+                            <a href="{{ constant('BASE_URL') }}editar_usuario.php?id={{ usuario.id }}" 
+                            class="btn-primario btn-modificar-usuario">
+                                Modificar
+                            </a>
+                            
+                            <a href="{{ constant('BASE_URL') }}borrar_usuario.php?id={{ usuario.id }}" 
+                            class="btn-modificar-usuario btn-eliminar-usuario" 
+                            onclick="return confirm('¿Estás seguro de que quieres eliminar a {{ usuario.nick }} del sistema?');">
+                                Eliminar
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="celda-centrada texto-ayuda-password">
+                            No se han encontrado usuarios en el sistema.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

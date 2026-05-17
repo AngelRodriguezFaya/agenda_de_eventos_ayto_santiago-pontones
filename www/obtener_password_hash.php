@@ -1,3 +1,3 @@
 <?php
-echo password_hash("gestor", PASSWORD_DEFAULT);
+echo password_hash("usuario", PASSWORD_DEFAULT);
 ?>

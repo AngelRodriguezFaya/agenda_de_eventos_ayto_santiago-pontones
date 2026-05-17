@@ -1355,3 +1355,120 @@ article.evento .galeria-imagenes h3 {
 .btn-borrar-evento:hover {
     background-color: #c82333; /* Rojo más oscuro al pasar el ratón */
 }
+
+/* ==========================================================================
+   PANEL DE SUPERUSUARIO (GESTIÓN DE USUARIOS)
+   ========================================================================== */
+
+/* Contenedor principal de la tabla */
+.zona-tabla-usuarios {
+    margin-top: 20px;
+    background-color: white !important; /* Fondo blanco de la caja */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    color: #333 !important; /* Forzamos color oscuro para párrafos y textos generales aquí dentro */
+}
+
+/* Estilos específicos de la tabla */
+.tabla-administracion {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    background-color: white; /* Aseguramos fondo blanco en la tabla */
+}
+
+.tabla-administracion thead tr {
+    border-bottom: 2px solid #ddd;
+    background-color: #f2f2f2; /* Gris clarito para la cabecera */
+}
+
+.tabla-administracion th {
+    padding: 12px;
+    font-weight: bold;
+    color: #555 !important; /* Encabezados en gris oscuro */
+}
+
+.tabla-administracion tbody tr {
+    border-bottom: 1px solid #eee;
+}
+
+/* Forzamos el color negro/oscuro en todas las celdas del cuerpo */
+.tabla-administracion tbody td {
+    padding: 12px;
+    color: #333 !important; /* Letras oscuras para que se lean sobre blanco */
+}
+
+.tabla-administracion .nick-usuario {
+    font-weight: bold;
+    color: black !important; /* Nick en negro puro */
+}
+
+.tabla-administracion .celda-centrada {
+    text-align: center;
+}
+
+/* Botón de acción dentro de la tabla */
+.btn-modificar-usuario {
+    padding: 6px 12px;
+    font-size: 13px;
+    text-decoration: none;
+    border-radius: 4px;
+    display: inline-block;
+    /* Este hereda .btn-primario, por lo que su letra seguirá siendo blanca sobre fondo azul */
+}
+
+/* Colores dinámicos para los roles (estos SÍ mantienen letra blanca) */
+.rol-tag {
+    color: white !important; /* Forzamos letra blanca SOBRE el fondo de color */
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.rol-superusuario { background-color: #d9534f; } /* Rojo */
+.rol-gestor       { background-color: #f0ad4e; } /* Naranja */
+.rol-moderador    { background-color: #5bc0de; } /* Azul */
+.rol-registrado   { background-color: #5cb85c; } /* Verde */
+
+/* Contenedor del mensaje de error crítico (Borrado de último Superusuario) */
+.contenedor-error-critico {
+    text-align: center;
+    padding: 50px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Título de la alerta crítica */
+.titulo-error-critico {
+    color: #dc3545; /* Rojo de peligro */
+    margin-bottom: 15px;
+}
+
+/* Botón de retorno en la pantalla de error */
+.btn-error-critico {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #333;
+    color: white !important;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+.btn-error-critico:hover {
+    background-color: #555;
+}
+
+/* Botón específico para la acción de Eliminar Usuario en la tabla */
+.btn-eliminar-usuario {
+    background-color: #dc3545 !important; 
+    color: white !important;
+    margin-left: 5px;
+}
+
+.btn-eliminar-usuario:hover {
+    background-color: #bd2130 !important;
+}
