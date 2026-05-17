@@ -1319,3 +1319,39 @@ article.evento .galeria-imagenes h3 {
     gap: 15px;
     margin-top: 20px;
 }
+
+/* ==========================================================================
+   BOTONES DE ACCIÓN EN EL GESTOR (EDITAR Y ELIMINAR)
+   ========================================================================== */
+.acciones-evento-gestor a {
+    text-decoration: none !important; /* Para quitar cualquier subrayado que pueda tener el enlace */
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    color: white !important; /* Fuerza la letra blanca, quitando el morado/azul */
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+/* Estilo para el botón de Editar */
+.btn-editar-evento {
+    background-color: #007bff; /* Azul profesional */
+    border: 1px solid #0056b3;
+}
+
+.btn-editar-evento:hover {
+    background-color: #0056b3; /* Azul más oscuro al pasar el ratón */
+}
+
+/* Estilo para el botón de Eliminar */
+.btn-borrar-evento {
+    background-color: #dc3545; /* Rojo de peligro */
+    border: 1px solid #c82333;
+}
+
+.btn-borrar-evento:hover {
+    background-color: #c82333; /* Rojo más oscuro al pasar el ratón */
+}

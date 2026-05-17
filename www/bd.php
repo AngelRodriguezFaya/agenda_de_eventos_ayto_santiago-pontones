@@ -55,7 +55,7 @@ class BD {
 
     public static function getGaleria($evento_id) {
         $db = self::conectar();
-        $stmt = $db->prepare("SELECT ruta_imagen, descripcion FROM galeria_imagenes WHERE evento_id = ? AND es_cartel = 0");
+        $stmt = $db->prepare("SELECT id, ruta_imagen, descripcion FROM galeria_imagenes WHERE evento_id = ? AND es_cartel = 0");
         $stmt->execute([$evento_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -88,53 +88,8 @@ class BD {
     }
 
     /**
-     * Recupera todos los eventos, permitiendo filtrar por un término 
-     * buscando en el título o en la descripción según el criterio elegido.
-     * 
-     * Sólo puede hacerlo el gestor o el superusuario desde el panel de gestión de eventos.
+     * Obtiene los eventos filtrados por título, descripción o hashtag. Si no se especifica ningún término, devuelve todos los eventos.
      */
-    // public static function getEventosFiltrados($termino = '', $criterio = '') {
-    //     $db = self::conectar();
-    //     try {
-    //         // Empezamos con la consulta base (traemos ID, título, fecha y categoría)
-    //         $sql = "SELECT e.id, e.titulo, e.fecha_realizacion, e.descripcion, c.nombre as categoria 
-    //                 FROM eventos e 
-    //                 LEFT JOIN categorias c ON e.categoria_id = c.id 
-    //                 WHERE 1=1";
-            
-    //         $parametros = [];
-
-    //         // Si el gestor ha escrito algo en la barra de búsqueda
-    //         if (!empty($termino)) {
-    //             if ($criterio === 'titulo') {
-    //                 $sql .= " AND e.titulo LIKE ?";
-    //                 $parametros[] = "%" . $termino . "%";
-    //             } elseif ($criterio === 'descripcion') {
-    //                 $sql .= " AND e.descripcion LIKE ?";
-    //                 $parametros[] = "%" . $termino . "%";
-    //             } else {
-    //                 // Por seguridad: si por algún motivo no llega ni 'titulo' ni 'descripcion',
-    //                 // buscamos en ambos campos a la vez por defecto.
-    //                 $sql .= " AND (e.titulo LIKE ? OR e.descripcion LIKE ?)";
-    //                 $parametros[] = "%" . $termino . "%";
-    //                 $parametros[] = "%" . $termino . "%";
-    //             }
-    //         }
-
-    //         // Ordenamos del más reciente al más antiguo
-    //         $sql .= " ORDER BY e.fecha_realizacion DESC";
-
-    //         $stmt = $db->prepare($sql);
-    //         $stmt->execute($parametros);
-            
-    //         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    //     } catch (PDOException $e) {
-    //         error_log("Error en getEventosFiltrados: " . $e->getMessage());
-    //         return [];
-    //     }
-    // }
-
     public static function getEventosFiltrados($termino = '', $criterio = '') {
         $db = self::conectar();
         try {
@@ -159,6 +114,15 @@ class BD {
                 } elseif ($criterio === 'descripcion') {
                     $sql .= " AND e.descripcion LIKE ?";
                     $parametros[] = "%" . $termino . "%";
+                } elseif ($criterio === 'hashtag') {
+                    // SUBCONSULTA: Buscamos si el ID del evento está en la lista de eventos que tienen este hashtag
+                    $sql .= " AND e.id IN (
+                                SELECT eh2.evento_id 
+                                FROM eventos_hashtags eh2 
+                                JOIN hashtags h2 ON eh2.hashtag_id = h2.id 
+                                WHERE h2.etiqueta LIKE ?
+                                )";
+                    $parametros[] = "%" . $termino . "%";
                 } else {
                     $sql .= " AND (e.titulo LIKE ? OR e.descripcion LIKE ?)";
                     $parametros[] = "%" . $termino . "%";
@@ -176,10 +140,127 @@ class BD {
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         } catch (PDOException $e) {
-            // Volvemos a poner el log normal y devolver lista vacía para no asustar al usuario final
             error_log("Error en getEventosFiltrados: " . $e->getMessage());
             return [];
         }
+    }
+
+    /**
+     * Obtiene todas las categorías disponibles para el desplegable del Gestor (id y nombre)
+     */
+    public static function getCategorias() {
+        $db = self::conectar();
+        $res = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC");
+        return $res->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Obtiene todas las localidades para el desplegable del Gestor (id y nombre)
+     */
+    public static function getLocalidadesDropdown() {
+        $db = self::conectar();
+        $res = $db->query("SELECT id, nombre FROM localidades ORDER BY nombre ASC");
+        return $res->fetchAll(PDO::FETCH_ASSOC); 
+    }
+
+    /**
+     * Inserta un nuevo evento en la base de datos y devuelve su ID generada.
+     */
+    public static function insertarEvento($titulo, $descripcion, $fecha, $categoria_id, $localidad_id) {
+        $db = self::conectar();
+        $stmt = $db->prepare("INSERT INTO eventos (titulo, descripcion, fecha_realizacion, categoria_id, localidad_id) VALUES (?, ?, ?, ?, ?)");
+        if ($stmt->execute([$titulo, $descripcion, $fecha, $categoria_id, $localidad_id])) {
+            return $db->lastInsertId(); // Devolvemos el ID del evento recién creado
+        }
+        return false;
+    }
+
+    /**
+     * Actualiza un evento existente.
+     */
+    public static function actualizarEvento($id, $titulo, $descripcion, $fecha, $categoria_id, $localidad_id) {
+        $db = self::conectar();
+        $stmt = $db->prepare("UPDATE eventos SET titulo = ?, descripcion = ?, fecha_realizacion = ?, categoria_id = ?, localidad_id = ? WHERE id = ?");
+        return $stmt->execute([$titulo, $descripcion, $fecha, $categoria_id, $localidad_id, $id]);
+    }
+
+    /**
+     * Guarda la ruta de una imagen en la galería. 
+     * Si es un cartel (es_cartel=1), primero borra el cartel anterior.
+     */
+    public static function guardarImagenEvento($ruta_imagen, $evento_id, $es_cartel = 0) {
+        $db = self::conectar();
+        
+        if ($es_cartel == 1) {
+            // Borramos el registro del cartel viejo para que solo haya 1 cartel por evento
+            $stmtDel = $db->prepare("DELETE FROM galeria_imagenes WHERE evento_id = ? AND es_cartel = 1");
+            $stmtDel->execute([$evento_id]);
+        }
+        
+        $stmt = $db->prepare("INSERT INTO galeria_imagenes (ruta_imagen, evento_id, es_cartel) VALUES (?, ?, ?)");
+        return $stmt->execute([$ruta_imagen, $evento_id, $es_cartel]);
+    }
+
+    /**
+     * Elimina una imagen concreta de la galería (físicamente del disco duro y de la BD).
+     */
+    public static function borrarImagenPorId($id_imagen) {
+        $db = self::conectar();
+        
+        // Primero recuperamos la ruta para borrar el archivo de la carpeta
+        $stmt = $db->prepare("SELECT ruta_imagen FROM galeria_imagenes WHERE id = ?");
+        $stmt->execute([$id_imagen]);
+        $img = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($img) {
+            // Si el archivo existe físicamente en el servidor, lo borramos (unlink)
+            if (file_exists($img['ruta_imagen'])) {
+                unlink($img['ruta_imagen']); 
+            }
+            // Borramos el registro de la tabla
+            $stmtDel = $db->prepare("DELETE FROM galeria_imagenes WHERE id = ?");
+            return $stmtDel->execute([$id_imagen]);
+        }
+        return false;
+    }
+
+    /**
+     * Sincroniza los hashtags de un evento. Borra los viejos y mete los nuevos.
+     */
+    public static function actualizarHashtags($evento_id, $cadena_hashtags) {
+        $db = self::conectar();
+        
+        // 1. Borramos las relaciones anteriores de este evento
+        $stmt = $db->prepare("DELETE FROM eventos_hashtags WHERE evento_id = ?");
+        $stmt->execute([$evento_id]);
+
+        if (empty(trim($cadena_hashtags))) return true;
+
+        // 2. Procesamos la cadena (ej: "Música, Fiesta, Cultura")
+        $tags = explode(',', $cadena_hashtags);
+        foreach ($tags as $tag) {
+            $tag = trim($tag); // Quitamos espacios sobrantes
+            if (empty($tag)) continue;
+
+            // 3. Verificamos si la etiqueta ya existe en la tabla `hashtags`
+            $stmtBusca = $db->prepare("SELECT id FROM hashtags WHERE etiqueta = ?");
+            $stmtBusca->execute([$tag]);
+            $hashtagRow = $stmtBusca->fetch(PDO::FETCH_ASSOC);
+
+            if ($hashtagRow) {
+                $hashtag_id = $hashtagRow['id'];
+            } else {
+                // Si no existe, la insertamos como un nuevo hashtag en el sistema
+                $stmtIns = $db->prepare("INSERT INTO hashtags (etiqueta) VALUES (?)");
+                $stmtIns->execute([$tag]);
+                $hashtag_id = $db->lastInsertId();
+            }
+
+            // 4. Creamos la nueva relación en la tabla intermedia
+            $stmtVinculo = $db->prepare("INSERT INTO eventos_hashtags (evento_id, hashtag_id) VALUES (?, ?)");
+            $stmtVinculo->execute([$evento_id, $hashtag_id]);
+        }
+        return true;
     }
 
     // ========================================================================
@@ -274,6 +355,34 @@ class BD {
         }
     }
 
+    /**
+     * Elimina un evento por completo: borra físicamente sus imágenes del servidor 
+     * y luego elimina el registro de la base de datos.
+     */
+    public static function borrarEvento($id_evento) {
+        $db = self::conectar();
+        try {
+            // 1. Buscamos todas las imágenes asociadas a este evento (cartel y galería)
+            $stmt = $db->prepare("SELECT ruta_imagen FROM galeria_imagenes WHERE evento_id = ?");
+            $stmt->execute([$id_evento]);
+            $imagenes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            // 2. Recorremos las imágenes y las borramos del disco duro del servidor
+            foreach ($imagenes as $img) {
+                if (!empty($img['ruta_imagen']) && file_exists($img['ruta_imagen'])) {
+                    unlink($img['ruta_imagen']); 
+                }
+            }
+            
+            // 3. Borramos el evento. (El ON DELETE CASCADE de MySQL borrará el resto de tablas)
+            $stmtDel = $db->prepare("DELETE FROM eventos WHERE id = ?");
+            return $stmtDel->execute([$id_evento]);
+            
+        } catch (PDOException $e) {
+            error_log("Error al borrar evento: " . $e->getMessage());
+            return false;
+        }
+    }
 
     // ========================================================================
     //                      GESTIÓN DE USUARIOS

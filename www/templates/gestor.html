@@ -17,6 +17,7 @@
                 <select name="criterio">
                     <option value="titulo" {% if criterio == 'titulo' %}selected{% endif %}>En Título</option>
                     <option value="descripcion" {% if criterio == 'descripcion' %}selected{% endif %}>En Descripción</option>
+                    <option value="hashtag" {% if criterio == 'hashtag' %}selected{% endif %}>En Hashtags</option>
                 </select>
                 <button type="submit" class="btn-buscar-lupa">Buscar</button>
             </div>
@@ -42,8 +43,12 @@
                     <div class="cabecera-info-gestor">
                         <h3>{{ evento.titulo }}</h3>
                         <div class="acciones-evento-gestor">
-                            <a href="{{ constant('BASE_URL') }}editar_evento.php?id={{ evento.id }}" class="btn-editar-comentario btn-pequeno">Editar</a>
-                            <button class="btn-borrar-comentario btn-pequeno btn-peligro">Eliminar</button>
+                            <a href="{{ constant('BASE_URL') }}editar_evento.php?id={{ evento.id }}" class="btn-editar-evento">Editar</a>
+                            <a href="{{ constant('BASE_URL') }}borrar_evento.php?id={{ evento.id }}" 
+                                class="btn-borrar-evento btn-peligro" 
+                                onclick="return confirm('¿Estás seguro de que deseas eliminar este evento y todas sus imágenes? Esta acción NO se puede deshacer.');">
+                                Eliminar
+                            </a>
                         </div>
                     </div>
                     
@@ -54,7 +59,6 @@
                     </div>
                     
                     <p class="descripcion-corta-gestor">
-                        <!-- {{ evento.descripcion|length > 180 ? evento.descripcion|slice(0, 180) ~ '...' : evento.descripcion }} -->
                         {{ evento.descripcion }}
                     </p>
                     

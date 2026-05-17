@@ -20,8 +20,9 @@
 
         <div class="fila-form">
             <div class="grupo-form">
-                <label for="fecha">Fecha de Realización:</label>
-                <input type="date" id="fecha" name="fecha_realizacion" value="{{ evento.fecha_realizacion }}" required>
+                <label for="fecha_realizacion">Fecha de realización:</label>
+                <input type="date" id="fecha_realizacion" name="fecha_realizacion" 
+                    value="{{ evento.fecha_realizacion ? evento.fecha_realizacion|date('Y-m-d') : '' }}" required>
             </div>
 
             <div class="grupo-form">
@@ -60,7 +61,7 @@
         <h3>Gestión de Imágenes</h3>
 
         <div class="grupo-form zona-archivos">
-            <label for="cartel">Cartel Principal (es_cartel = 1):</label>
+            <label for="cartel">Cartel Principal del Evento:</label>
             {% if cartel_actual %}
                 <div class="preview-imagen">
                     <img src="{{ constant('BASE_URL') }}{{ cartel_actual.ruta_imagen }}" alt="Cartel actual">
@@ -88,7 +89,6 @@
             {% endif %}
             
             <input type="file" id="galeria" name="galeria[]" accept="image/*" multiple>
-            <small>Mantén pulsado Ctrl (o Cmd en Mac) al seleccionar los archivos para subir varias imágenes de golpe.</small>
         </div>
 
         <div class="botones-formulario">
