@@ -77,10 +77,17 @@
 
         <nav class="menu-lateral">
             <ul>
-                <li><button class="button_menu" onclick="alert('En construcción!')">Menú 1</button></li>
+                <!-- <li><button class="button_menu" onclick="alert('En construcción!')">Menú 1</button></li>
                 <li><button class="button_menu" onclick="alert('En construcción!')">Menú 2</button></li>
-                <li><button class="button_menu" onclick="alert('En construcción!')">Menú 3</button></li>
+                <li><button class="button_menu" onclick="alert('En construcción!')">Menú 3</button></li> -->
             
+            {% if session.rol == 'gestor' or session.rol == 'superusuario' %}                <li>
+                    <button type="button" class="button_menu" onclick="window.location.href='{{ constant('BASE_URL') }}gestor.php'">
+                        Gestión de Eventos
+                    </button>
+                </li>
+            {% endif %}
+
             {% if session.rol == 'moderador' or session.rol == 'superusuario' %}                <li>
                     <button type="button" class="button_menu" onclick="window.location.href='{{ constant('BASE_URL') }}comentarios.php'">
                         Gestión de Comentarios

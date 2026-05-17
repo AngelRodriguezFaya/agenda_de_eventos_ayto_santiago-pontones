@@ -29,6 +29,7 @@ if ($evento_id !== null && $evento_id !== false) {
         $galeria = BD::getGaleria($evento_id);
         $comentarios = BD::getComentarios($evento_id);
         $localidades = BD::getListaLocalidades(); // Es necesario para el script JS
+        $hashtags = BD::getHashtagsEvento($evento_id); 
 
         // Elegimos la plantilla según si se ha pedido la versión para imprimir o no
         $plantilla = $imprimir ? 'evento_imprimir.html' : 'evento.html';
@@ -37,7 +38,8 @@ if ($evento_id !== null && $evento_id !== false) {
             'evento' => $evento,
             'galeria' => $galeria,
             'comentarios' => $comentarios,
-            'localidades' => $localidades
+            'localidades' => $localidades,
+            'hashtags' => $hashtags
         ]);
     } else {
         // En caso de que el usuario ponga un ID que no existe (ej: /evento/999)

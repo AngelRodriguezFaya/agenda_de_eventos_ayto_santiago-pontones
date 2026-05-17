@@ -17,6 +17,15 @@
             <h2 class="titulo-evento">{{ evento.titulo }}</h2>
         </div>
 
+        {# Si el evento tiene hashtags, los recorremos y los pintamos #}
+        {% if hashtags is not empty %}
+        <div class="contenedor-hashtags">
+            {% for h in hashtags %}
+                <span class="hashtag-etiqueta">#{{ h }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+
         <nav class="enlaces-evento">
             <ul>
                 <li>
