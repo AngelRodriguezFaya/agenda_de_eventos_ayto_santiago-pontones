@@ -9,18 +9,14 @@
     <p>Únete a nuestra página para poder comentar en los eventos.</p>
 
     {% if error %}
-        <div class="alerta-error">
-            <p>❌ <strong>Error:</strong> {{ error }}</p>
+        <div class="error-texto" style="color: red; margin-bottom: 15px;">
+            {{ error }}
         </div>
     {% endif %}
 
     {% if exito %}
-        <div class="alerta-exito">
-            <p>✅ <strong>{{ exito }}</strong></p>
-            <br>
-            <button onclick="document.getElementById('modal-login').classList.remove('oculto');" class="btn-primario">
-                Iniciar Sesión Ahora
-            </button>
+        <div class="exito-texto" style="color: green; margin-bottom: 15px;">
+            {{ exito }}
         </div>
     {% else %}
         <form action="{{ constant('BASE_URL') }}guardar_registro.php" method="POST" class="form-evento">

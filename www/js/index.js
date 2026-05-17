@@ -93,6 +93,14 @@ function esEmailValido(email) {
     return exprRegEmail.test(email);
 }
 
+/** Comprueba si una contraseña es fuerte: Mínimo 8 caracteres, al menos 1 letra y 1 número
+ *  Hace uso de una expresión regular que está ajustada para que no sea tan estricta que 
+ *  requiera mayúsculas obligatorias si no lo deseas, pero cumple el requisito estándar de "contraseña fuerte"
+ */
+function esPasswordFuerte(password) {
+    const regexPassword = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    return regexPassword.test(password);
+}
 
 // ==========================================================================================================
 //                              MANEJO DEL DOM 
@@ -520,4 +528,36 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     });
+
+    // ==========================================================================================================
+    //                          VALIDACIÓN DE FORMULARIO DE REGISTRO
+    // ==========================================================================================================
+    const formRegistro = document.querySelector('form[action*="guardar_registro.php"]');
+        
+    if (formRegistro) {
+        formRegistro.addEventListener('submit', function(evento) {
+            let email = document.getElementById('email').value;
+            let password = document.getElementById('password').value;
+            let password_confirm = document.getElementById('password_confirm').value;
+
+            if (!esEmailValido(email)) {
+                alert("❌ Por favor, introduce un correo electrónico válido.");
+                evento.preventDefault(); 
+                return;
+            }
+
+            if (!esPasswordFuerte(password)) {
+                alert("❌ La contraseña debe tener al menos 8 caracteres, incluir una letra y un número.");
+                evento.preventDefault();
+                return;
+            }
+
+            // Comprobar que las contraseñas coinciden
+            if (password !== password_confirm) {
+                alert("❌ Las contraseñas no coinciden.");
+                evento.preventDefault();
+                return;
+            }
+        });
+    }
 });
