@@ -14,6 +14,7 @@ if (!isset($_SESSION['id'])) {
 // Configuración de Twig
 $loader = new \Twig\Loader\FilesystemLoader('templates');
 $twig = new \Twig\Environment($loader);
+
 // Pasamos la sesión como una variable global a Twig
 $twig->addGlobal('session', $_SESSION);
 
@@ -55,3 +56,4 @@ echo $twig->render('perfil.html', [
     'exito' => $exito
 ]);
 
+?>

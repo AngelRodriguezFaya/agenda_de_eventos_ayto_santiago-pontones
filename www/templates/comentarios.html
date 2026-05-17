@@ -1,0 +1,60 @@
+
+{# templates/comentarios.html #}
+{% extends "padre.html" %}
+
+{% block titulo %}Gestión de Comentarios - Agenda de Eventos{% endblock %}
+
+{% block central %}
+<section class="contenedor-gestion-comentarios">
+    <h2>Gestión Global de Comentarios</h2>
+    <p>Utiliza los filtros para buscar comentarios específicos por texto o por autor.</p>
+
+    {# Buscador / Filtros #}
+    <form action="comentarios.php" method="GET" class="formulario-filtros">
+        <div class="campo-filtro">
+            <input type="text" name="buscar_texto" placeholder="Buscar palabra en el texto..." value="{{ filtro_texto }}">
+        </div>
+        <div class="campo-filtro">
+            <input type="text" name="buscar_autor" placeholder="Buscar por Nick o Email..." value="{{ filtro_autor }}">
+        </div>
+        <div class="botones-filtro">
+            <button type="submit" class="btn-primario">Filtrar</button>
+            <a href="comentarios.php" class="btn-secundario">Limpiar</a>
+        </div>
+    </form>
+
+    {# Listado en Tarjetas (Grid) #}
+    <div class="zona-comentarios-grid">
+        {% for comentario in comentarios %}
+            {# Usamos la clase "comentario" para index.js detecte los botones de editar/borrar comentarios#}
+            <div class="tarjeta-comentario-admin comentario" data-id="{{ comentario.id }}">
+                
+                <div class="cabecera-tarjeta">
+                    <h4>{{ comentario.nombre }}</h4>
+                    <span class="email-comentario">{{ comentario.email }}</span>
+                    <p class="fecha-comentario">{{ comentario.fecha_hora }}</p>
+                </div>
+
+                <div class="evento-origen">
+                    <small>📍 Evento: <strong>{{ comentario.evento_titulo }}</strong></small>
+                </div>
+
+                <div class="cuerpo-tarjeta">
+                    <p>{{ comentario.texto }}</p>
+                </div>
+                
+                {# Estos botones compartin la lógica con el panel de comentarios #}
+                <div class="acciones-comentario">
+                    <button class="btn-editar-comentario btn-pequeno">Editar</button>
+                    <button class="btn-borrar-comentario btn-pequeno btn-peligro">Eliminar</button>
+                </div>
+
+            </div>
+        {% else %}
+            <div class="alerta-aviso">
+                <p>No se han encontrado comentarios con esos filtros.</p>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

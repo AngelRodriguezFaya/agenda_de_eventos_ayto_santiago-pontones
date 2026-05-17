@@ -123,11 +123,18 @@
     <!-- Lista de comentarios de otras personas -->
     <div id="lista-comentarios">
         {% for comentario in comentarios %}
-        <div class="comentario">
+        <div class="comentario" data-id="{{ comentario.id }}">
             <h4>{{ comentario.nombre }}</h4>
             <p class="email-comentario">{{ comentario.email }}</p>
-            <p>{{ comentario.texto }}</p>
+            <p class="texto-del-comentario">{{ comentario.texto }}</p>
             <p class="fecha-comentario">{{ comentario.fecha_hora }}</p>
+
+            {% if session.rol == 'moderador' or session.rol == 'superusuario' %}
+            <div class="acciones-comentario">
+                <button class="btn-editar-comentario btn-pequeno">Editar</button>
+                <button class="btn-borrar-comentario btn-pequeno btn-peligro">Eliminar</button>
+            </div>
+            {% endif %}
         </div>
         {% else %}
         <p>Aún no hay comentarios. ¡Anímate a ser el primero!</p>

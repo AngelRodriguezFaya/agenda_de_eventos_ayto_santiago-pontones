@@ -57,8 +57,7 @@ class BD {
 
     public static function getComentarios($evento_id) {
         $db = self::conectar();
-        $stmt = $db->prepare("SELECT nombre, email, texto, fecha_hora FROM comentarios WHERE evento_id = ? ORDER BY fecha_hora DESC");
-        $stmt->execute([$evento_id]);
+        $stmt = $db->prepare("SELECT id, nombre, email, texto, fecha_hora FROM comentarios WHERE evento_id = ? ORDER BY fecha_hora DESC");        $stmt->execute([$evento_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -163,6 +162,79 @@ class BD {
         } catch (PDOException $e) {
             error_log("Error en actualizarPerfil: " . $e->getMessage());
             return false;
+        }
+    }
+
+    /**
+     * Borra un comentario por su ID. Solo lo pueden hacer moderadores o superusuarios.
+     */
+    public static function borrarComentario($comentario_id) {
+        $db = self::conectar();
+        try {
+            $stmt = $db->prepare("DELETE FROM comentarios WHERE id = ?");
+            return $stmt->execute([$comentario_id]);
+        } catch (PDOException $e) {
+            error_log("Error en borrarComentario: " . $e->getMessage());
+            return false;
+        }
+    }
+
+
+    /**
+     * Actualiza el texto de un comentario. Solo lo pueden hacer moderadores o superusuarios.
+     */
+    public static function editarComentario($id, $nuevoTexto) {
+        $db = self::conectar();
+        try {
+            $stmt = $db->prepare("UPDATE comentarios SET texto = ? WHERE id = ?");
+            return $stmt->execute([$nuevoTexto, $id]);
+        } catch (PDOException $e) {
+            error_log("Error al editar comentario: " . $e->getMessage());
+            return false;
+        }
+    }
+
+
+    /**
+     * Recupera todos los comentarios de la base de datos con información del evento.
+     * Permite filtrar opcionalmente por texto del comentario o por nick/nombre del autor.
+     */
+    public static function getFiltrarComentarios($texto = '', $autor = '') {
+        $db = self::conectar();
+        try {
+            // Hacemos un INNER JOIN para traernos también el título del evento 
+            // y que el moderador sepa a qué noticia/evento corresponde cada comentario.
+            $sql = "SELECT c.*, e.titulo AS evento_titulo 
+                    FROM comentarios c 
+                    INNER JOIN eventos e ON c.evento_id = e.id 
+                    WHERE 1=1";
+            
+            $parametros = [];
+
+            // Si el moderador ha escrito algo en el campo de buscar texto
+            if (!empty($texto)) {
+                $sql .= " AND c.texto LIKE ?";
+                $parametros[] = "%" . $texto . "%";
+            }
+
+            // Si el moderador ha escrito algo en el campo de buscar autor
+            if (!empty($autor)) {
+                $sql .= " AND (c.nombre LIKE ? OR c.email LIKE ?)";
+                $parametros[] = "%" . $autor . "%";
+                $parametros[] = "%" . $autor . "%";
+            }
+
+            // Ordenamos para que salgan primero los más recientes
+            $sql .= " ORDER BY c.fecha_hora DESC";
+
+            $stmt = $db->prepare($sql);
+            $stmt->execute($parametros);
+            
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+        } catch (PDOException $e) {
+            error_log("Error en getFiltrarComentarios: " . $e->getMessage());
+            return [];
         }
     }
 }

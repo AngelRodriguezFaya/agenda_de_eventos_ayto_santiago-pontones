@@ -81,6 +81,13 @@
                 <li><button class="button_menu" onclick="alert('En construcción!')">Menú 2</button></li>
                 <li><button class="button_menu" onclick="alert('En construcción!')">Menú 3</button></li>
             
+            {% if session.rol == 'moderador' or session.rol == 'superusuario' %}                <li>
+                    <button type="button" class="button_menu" onclick="window.location.href='{{ constant('BASE_URL') }}comentarios.php'">
+                        Gestión de Comentarios
+                    </button>
+                </li>
+            {% endif %}
+            
             {% if session.nick is defined %}
                 <li>
                     <button type="button" class="button_menu" onclick="window.location.href='{{ constant('BASE_URL') }}perfil.php'">
