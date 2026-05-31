@@ -1,7 +1,7 @@
-// portada.js - 
+// portada.js - Lógica para la búsqueda en la portada
 
 document.addEventListener('DOMContentLoaded', function() {
-    const BASE_URL = document.body.dataset.baseUrl || '/';
+    // const BASE_URL = document.body.dataset.baseUrl || '/';
     const input = document.getElementById('input-busqueda-portada');
     const desplegable = document.getElementById('desplegable-busqueda');
 
@@ -9,8 +9,10 @@ document.addEventListener('DOMContentLoaded', function() {
     let temporizador = null;
 
     input.addEventListener('input', function() {
+        // Si ha habido un cambio en el input
+        
         const termino = this.value.trim();
-
+        
         // Limpiamos el temporizador anterior para no hacer peticiones innecesarias
         clearTimeout(temporizador);
 

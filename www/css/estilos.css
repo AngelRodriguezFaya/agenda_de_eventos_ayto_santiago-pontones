@@ -739,7 +739,7 @@ article.evento .galeria-imagenes h3 {
 /* La clase 'oculto' (Indica si el panel se encuentra oculto) */
 #panel_comentarios.oculto {
     transform: translateX(100%); /* Para mover el panel completamente fuera de la pantalla  y hacia la derecha */
-    display: block; 
+    display: block !important; 
 }
 
 /* ================= Estilos de los elementos del panel de comentarios ================= */

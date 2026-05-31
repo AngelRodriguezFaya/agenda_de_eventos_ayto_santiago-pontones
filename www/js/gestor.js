@@ -114,36 +114,76 @@ document.addEventListener('DOMContentLoaded', function () {
     //      CAMBIO DE VISIBILIDAD (PUBLICADO/NO PUBLICADO) CON AJAX
     // ================================================================
 
-    async function cambiarVisibilidad() {
-        const idEvento    = this.dataset.id;
-        const nuevoEstado = this.checked ? 1 : 0;
-        const mensajeGuardado = document.getElementById('estado-visibilidad-' + idEvento);
+    // Buscamos TODOS los checkboxes con la clase que pusimos en el HTML
+    const checkboxesVisibilidad = document.querySelectorAll('.check-visibilidad');
 
-        try {
-            const respuesta = await fetch(BASE_URL + 'api_visibilidad.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id_evento: idEvento, estado: nuevoEstado })
-            });
+    checkboxesVisibilidad.forEach(checkbox => {
+        checkbox.addEventListener('change', async function() {
+            // Obtenemos el ID del evento guardado en el atributo data-id del HTML
+            const idEvento = this.getAttribute('data-id');
+            // Según el estado del checkbox, decidimos si el nuevo estado es 1 (publicado) o 0 (no publicado)
+            const nuevoEstado = this.checked ? 1 : 0; 
 
-            const resultado = await respuesta.json();
+            // Buscamos el span del mensaje de Guardado para este evento especifico
+            const mensajeGuardado = document.getElementById(`estado-visibilidad-${idEvento}`);
 
-            if (respuesta.ok && resultado.status === 'success') {
-                if (mensajeGuardado) {
-                    mensajeGuardado.classList.remove('oculto');
-                    setTimeout(() => mensajeGuardado.classList.add('oculto'), 2000);
+            try {
+                const respuesta = await fetch(BASE_URL + 'api_visibilidad.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id_evento: idEvento, estado: nuevoEstado })
+                });
+
+                const resultado = await respuesta.json();
+
+                if (respuesta.ok && resultado.status === "success") {
+                    if (mensajeGuardado) {
+                        mostrarElemento(mensajeGuardado);
+                        // Ocultar a los 2 segundos
+                        setTimeout(() => { ocultarElemento(mensajeGuardado); }, 2000);
+                    }
+                } else {
+                    alert("Error al cambiar la visibilidad: " + (resultado.message || "No se pudo actualizar"));
+                    this.checked = !this.checked; // Revertir el checkbox si falló
                 }
-            } else {
-                alert('Error: ' + (resultado.message || 'No se pudo actualizar'));
-                this.checked = !this.checked;
+            } catch (error) {
+                console.error('Error fatal en la petición:', error);
+                alert("Hubo un problema de conexión con el servidor.");
+                this.checked = !this.checked; // Revertir
             }
-        } catch (error) {
-            console.error('Error al cambiar visibilidad:', error);
-            this.checked = !this.checked;
-        }
-    }
-
-    document.querySelectorAll('.check-visibilidad').forEach(function(checkbox) {
-        checkbox.addEventListener('change', cambiarVisibilidad);
+        });
     });
+
+    // async function cambiarVisibilidad() {
+    //     const idEvento    = this.dataset.id;
+    //     const nuevoEstado = this.checked ? 1 : 0;
+    //     const mensajeGuardado = document.getElementById('estado-visibilidad-' + idEvento);
+
+    //     try {
+    //         const respuesta = await fetch(BASE_URL + 'api_visibilidad.php', {
+    //             method: 'POST',
+    //             headers: { 'Content-Type': 'application/json' },
+    //             body: JSON.stringify({ id_evento: idEvento, estado: nuevoEstado })
+    //         });
+
+    //         const resultado = await respuesta.json();
+
+    //         if (respuesta.ok && resultado.status === 'success') {
+    //             if (mensajeGuardado) {
+    //                 mensajeGuardado.classList.remove('oculto');
+    //                 setTimeout(() => mensajeGuardado.classList.add('oculto'), 2000);
+    //             }
+    //         } else {
+    //             alert('Error: ' + (resultado.message || 'No se pudo actualizar'));
+    //             this.checked = !this.checked;
+    //         }
+    //     } catch (error) {
+    //         console.error('Error al cambiar visibilidad:', error);
+    //         this.checked = !this.checked;
+    //     }
+    // }
+
+    // document.querySelectorAll('.check-visibilidad').forEach(function(checkbox) {
+    //     checkbox.addEventListener('change', cambiarVisibilidad);
+    // });
 });
