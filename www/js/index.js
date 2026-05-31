@@ -623,14 +623,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
     checkboxesVisibilidad.forEach(checkbox => {
         checkbox.addEventListener('change', async function() {
-            // Recuperamos el ID desde el atributo data-id del HTML
-            const idEvento = this.dataset.id;
+            // Obtenemos el ID del evento guardado en el atributo data-id del HTML
+            const idEvento = this.getAttribute('data-id');
+            // Según el estado del checkbox, decidimos si el nuevo estado es 1 (publicado) o 0 (no publicado)
             const nuevoEstado = this.checked ? 1 : 0; 
-            
-            // Si esto no sale en consola, es que el querySelectorAll no encontró nada
-            console.log(`Intentando cambiar evento ID: ${idEvento} al estado: ${nuevoEstado}`);
 
-            // Buscamos el texto de "¡Guardado!" correspondiente a este evento
+            // Buscamos el span del mensaje de Guardado para este evento especifico
             const mensajeGuardado = document.getElementById(`estado-visibilidad-${idEvento}`);
 
             try {
@@ -640,9 +638,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     body: JSON.stringify({ id_evento: idEvento, estado: nuevoEstado })
                 });
 
-                console.log("Estado HTTP de la respuesta:", respuesta.status);
                 const resultado = await respuesta.json();
-                console.log("Respuesta del servidor:", resultado);
 
                 if (respuesta.ok && resultado.status === "success") {
                     if (mensajeGuardado) {

@@ -60,6 +60,27 @@ class BD {
     }
 
     /**
+     * Busca eventos publicados cuyo título coincida con el término.
+     * Solo devuelve id y título, que es lo que necesita el desplegable de la portada.
+     */
+    public static function buscarEventosPublicados($termino) {
+        $db = self::conectar();
+        try {
+            $stmt = $db->prepare("SELECT id, titulo 
+                                FROM eventos 
+                                WHERE publicado = 1 
+                                AND titulo LIKE ? 
+                                ORDER BY fecha_realizacion DESC
+                                LIMIT 8");
+            $stmt->execute(['%' . $termino . '%']);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error en buscarEventosPublicados: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
      * Obtiene todas las imágenes de la galería de un evento (es_cartel = 0). 
      * Devuelve un array con id, ruta_imagen y descripción de cada imagen.
      */

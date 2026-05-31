@@ -9,6 +9,18 @@
 {% block central %}
     <h2>Próximos Eventos Destacados</h2>
     
+    {# BUSCADOR ESTILO GOOGLE #}
+    <div class="contenedor-buscador-portada">
+        <div class="buscador-google">
+            <input type="text" 
+                    id="input-busqueda-portada" 
+                    placeholder="🔍 Busca un evento..." 
+                    autocomplete="off">
+            {# El desplegable empieza oculto y se rellena con AJAX #}
+            <ul id="desplegable-busqueda" class="oculto"></ul>
+        </div>
+    </div>
+
     <div class="zona-eventos">
         {% for ev in eventos %}
             <div class="tarjeta-evento">
@@ -21,4 +33,9 @@
             </div>
         {% endfor %}
     </div>
+
+    {% block scripts_extra %}
+        <script src="{{ constant('BASE_URL') }}js/portada.js"></script>
+    {% endblock %}
+
 {% endblock %}

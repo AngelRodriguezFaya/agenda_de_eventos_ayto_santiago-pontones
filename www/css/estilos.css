@@ -388,6 +388,78 @@ main   {
     color: #3c70c3;
 }
 
+/* ----------------- Buscador tipo Google ----------------- */
+
+.contenedor-buscador-portada {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0 30px 0;
+}
+
+.buscador-google {
+    position: relative;
+    width: 90%;          
+    max-width: 900px;    
+}
+
+.buscador-google input {
+    width: 100%;
+    padding: 14px 25px;
+    font-size: 1.1rem;
+    background-color: rgb(248, 245, 230);  
+    border: 2px solid #c9c4a8;             
+    border-radius: 25px;
+    outline: none;
+    box-sizing: border-box;
+    color: #333;
+}
+
+.buscador-google input:focus {
+    border-color: #2052a2;   
+    box-shadow: 0 2px 8px rgba(32, 82, 162, 0.2);
+}
+
+#desplegable-busqueda {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: rgb(248, 245, 230);
+    border: 1px solid #c9c4a8;
+    border-top: none;
+    border-radius: 0 0 15px 15px;
+    list-style: none;
+    margin: 0;
+    padding: 5px 0;
+    z-index: 1000;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+#desplegable-busqueda li a {
+    display: block;
+    padding: 12px 25px;
+    color: #333;
+    text-decoration: none;
+    font-size: 1rem;
+    border-bottom: 1px solid #e5e0c8;  /* Separador sutil entre resultados */
+}
+
+#desplegable-busqueda li:last-child a {
+    border-bottom: none;   /* El último elemento no tiene separador */
+}
+
+#desplegable-busqueda li a:hover {
+    background-color: #ece8d0;   /* Crema ligeramente más oscuro al pasar el ratón */
+    color: #2052a2;              
+    padding-left: 35px;          /* Pequeño desplazamiento al hacer hover */
+    transition: all 0.15s ease;
+}
+
+#desplegable-busqueda li.sin-resultados {
+    padding: 12px 25px;
+    color: #999;
+    font-style: italic;
+}
 
 /* ========================== MEDIA QUERIES =============================== */
 
@@ -1064,7 +1136,7 @@ article.evento .galeria-imagenes h3 {
 
 .grupo-buscador-unido {
     display: flex;
-    border-radius: 25px;
+    border-radius: 20px;
     overflow: hidden;
     background-color: #fff;
     border: 2px solid #ccc;
@@ -1101,7 +1173,8 @@ article.evento .galeria-imagenes h3 {
 }
 
 .btn-limpiar-busqueda {
-    color: #ffcccc;
+    color: white;
+    background-color: rgb(253, 89, 89) !important;
     text-decoration: underline;
     font-size: 14px;
 }

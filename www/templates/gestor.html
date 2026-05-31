@@ -11,19 +11,22 @@
     <div class="acciones-superiores">
         <a href="{{ constant('BASE_URL') }}editar_evento.php" class="btn-primario btn-anadir-evento">+ Añadir Nuevo Evento</a>
 
-        <form action="{{ constant('BASE_URL') }}gestor.php" method="GET" class="buscador-gestor">
+        <form class="buscador-gestor" onsubmit="return false;">
             <div class="grupo-buscador-unido">
-                <input type="text" name="termino" placeholder="Buscar palabra clave..." value="{{ termino }}">
-                <select name="criterio">
+                <input type="text" 
+                        id="input-busqueda-gestor"
+                        name="termino" 
+                        placeholder="Buscar palabra clave..." 
+                        value="{{ termino }}"
+                        autocomplete="off">
+                <select id="select-criterio-gestor" name="criterio">
                     <option value="titulo" {% if criterio == 'titulo' %}selected{% endif %}>En Título</option>
                     <option value="descripcion" {% if criterio == 'descripcion' %}selected{% endif %}>En Descripción</option>
                     <option value="hashtag" {% if criterio == 'hashtag' %}selected{% endif %}>En Hashtags</option>
                 </select>
-                <button type="submit" class="btn-buscar-lupa">Buscar</button>
+                <button type="button" id="btn-buscar-gestor" class="btn-buscar-lupa">Buscar</button>
+                <button type="button" id="btn-limpiar-gestor" class="btn-limpiar-busqueda">Limpiar</button>
             </div>
-            {% if termino is not empty %}
-                <a href="{{ constant('BASE_URL') }}gestor.php" class="btn-limpiar-busqueda">Limpiar</a>
-            {% endif %}
         </form>
     </div>
 
@@ -93,4 +96,9 @@
         {% endfor %}
     </div>
 </section>
+
+{% block scripts_extra %}
+    <script src="{{ constant('BASE_URL') }}js/gestor.js"></script>
+{% endblock %}
+
 {% endblock %}
