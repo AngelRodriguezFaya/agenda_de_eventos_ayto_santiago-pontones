@@ -242,6 +242,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const campoEmail = document.getElementById('email');
     const campoTexto = document.getElementById('texto-comentario')
 
+
     // Para las variables dinámicas guardadas en la BD
 
         // 1. Localizamos el elemento que tiene los datos
@@ -437,6 +438,8 @@ document.addEventListener("DOMContentLoaded", function() {
                     const respuesta = await fetch(BASE_URL + 'borrar_comentario.php', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
+                        // body es el cuerpo del mensaje/peticion. stringify convierte el 
+                        // objeto de JavaScript a una cadena JSON para enviarlo al servidor.
                         body: JSON.stringify({ id: comentarioId })
                     });
 
@@ -560,4 +563,101 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     }
+
+    // ==========================================================================================================
+    //                 CAMBIO DE VISIBILIDAD DE LOS EVENTOS (PUBLICADO/NO PUBLICADO)
+    // ==========================================================================================================
+
+    // const checkboxesVisibilidad = document.querySelectorAll('.toggle-publicado');
+
+    // checkboxesVisibilidad.forEach(checkbox => {
+    //     checkbox.addEventListener('change', async function() {
+    //         // Obtenemos el ID del evento guardado en el atributo data-id del HTML
+    //         const idEvento = this.getAttribute('data-id');
+    //         // Según el estado del checkbox, decidimos si el nuevo estado es 1 (publicado) o 0 (no publicado)
+    //         const nuevoEstado = this.checked ? 1 : 0; 
+
+    //         // Buscamos el span del mensaje de Guardado para este evento especifico
+    //         const mensajeGuardado = document.getElementById(`estado-visibilidad-${idEvento}`);
+
+    //         try {
+    //             // Hacemos la petición AJAX
+    //             const respuesta = await fetch(BASE_URL + 'api_visibilidad.php', {
+    //                 method: 'POST',
+    //                 headers: { 'Content-Type': 'application/json' },
+    //                 body: JSON.stringify({ id_evento: idEvento, estado: nuevoEstado })
+    //             });
+
+    //             const resultado = await respuesta.json();
+
+    //             if (respuesta.ok && resultado.status === "success") {
+    //                 // Si el cambio se ha guardado correctamente en la base de datos, mostramos un mensaje de "Guardado"
+    //                 mostrarElemento(mensajeGuardado);
+
+    //                 // Y después de 2 segundos, ocultamos el mensaje de nuevo
+    //                 setTimeout(() => {
+    //                     ocultarElemento(mensajeGuardado);
+    //                 }, 2000);
+    //             } else {
+    //                 alert("Error al cambiar la visibilidad: " + (resultado.message || "No se pudo actualizar"));
+    //                 this.checked = !this.checked; // Revertimos el cambio del checkbox para reflejar el estado real
+    //             }
+    //         } catch (error) {
+    //             console.error('Error en la petición al cambiar visibilidad:', error);
+    //             alert("Hubo un problema de conexión con el servidor.");
+    //             this.checked = !this.checked; // Revertimos el cambio del checkbox para reflejar el estado real
+    //         }
+    //     });
+    // });
+
+    // ==========================================================================================================
+    //                 CAMBIO DE VISIBILIDAD DE LOS EVENTOS (PUBLICADO/NO PUBLICADO)
+    // ==========================================================================================================
+
+    
+
 });
+
+// Buscamos TODOS los checkboxes con la clase que pusimos en el HTML
+    const checkboxesVisibilidad = document.querySelectorAll('.check-visibilidad');
+
+    checkboxesVisibilidad.forEach(checkbox => {
+        checkbox.addEventListener('change', async function() {
+            // Recuperamos el ID desde el atributo data-id del HTML
+            const idEvento = this.dataset.id;
+            const nuevoEstado = this.checked ? 1 : 0; 
+            
+            // Si esto no sale en consola, es que el querySelectorAll no encontró nada
+            console.log(`Intentando cambiar evento ID: ${idEvento} al estado: ${nuevoEstado}`);
+
+            // Buscamos el texto de "¡Guardado!" correspondiente a este evento
+            const mensajeGuardado = document.getElementById(`estado-visibilidad-${idEvento}`);
+
+            try {
+                const respuesta = await fetch(BASE_URL + 'api_visibilidad.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id_evento: idEvento, estado: nuevoEstado })
+                });
+
+                console.log("Estado HTTP de la respuesta:", respuesta.status);
+                const resultado = await respuesta.json();
+                console.log("Respuesta del servidor:", resultado);
+
+                if (respuesta.ok && resultado.status === "success") {
+                    if (mensajeGuardado) {
+                        mostrarElemento(mensajeGuardado);
+                        // Ocultar a los 2 segundos
+                        setTimeout(() => { ocultarElemento(mensajeGuardado); }, 2000);
+                    }
+                } else {
+                    alert("Error al cambiar la visibilidad: " + (resultado.message || "No se pudo actualizar"));
+                    this.checked = !this.checked; // Revertir el checkbox si falló
+                }
+            } catch (error) {
+                console.error('Error fatal en la petición:', error);
+                alert("Hubo un problema de conexión con el servidor.");
+                this.checked = !this.checked; // Revertir
+            }
+        });
+    });

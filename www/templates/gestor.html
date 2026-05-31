@@ -30,6 +30,20 @@
     <div class="zona-eventos-gestor">
         {% for evento in eventos %}
             <div class="tarjeta-evento-gestor">
+
+                <div class="columna-visibilidad-gestor">
+                    <label class="switch-visibilidad">
+                        <input type="checkbox" 
+                            class="check-visibilidad" 
+                            data-id="{{ evento.id }}" 
+                            {% if evento.publicado == 1 %}checked{% endif %}>
+                        <span class="slider-visibilidad">Evento Publicado</span>
+                    </label>
+                    
+                    <span id="estado-visibilidad-{{ evento.id }}" class="oculto mensaje-evento-publicado">
+                        ¡Guardado!
+                    </span>
+                </div>
                 
                 <div class="contenedor-cartel-gestor">
                     {% if evento.ruta_imagen %}
