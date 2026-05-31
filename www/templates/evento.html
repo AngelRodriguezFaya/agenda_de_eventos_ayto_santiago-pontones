@@ -5,11 +5,26 @@
 {% block titulo %}Evento: {{ evento.titulo }} - Agenda{% endblock %}
 
 {% block central %}
-<article class="evento"> <!-- Zona del evento -->
+<!-- Zona del evento -->
+<article class="evento" 
+        id="evento-detalle"
+        data-id="{{ evento.id }}"
+        data-url-base="{{ constant('BASE_URL') }}"
+        data-localidades="{{ localidades|json_encode|e('html_attr') }}">
+
     <header class="encabezado-evento"> <!-- Encabezado del evento -->
         <div class="titulo-fecha-evento">
             <h2 class="titulo-evento">{{ evento.titulo }}</h2>
         </div>
+
+        {# Si el evento tiene hashtags, los recorremos y los pintamos #}
+        {% if hashtags is not empty %}
+        <div class="contenedor-hashtags">
+            {% for h in hashtags %}
+                <span class="hashtag-etiqueta">#{{ h }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
 
         <nav class="enlaces-evento">
             <ul>
@@ -71,7 +86,6 @@
     </section>
 </article>
 
-
 {# Zona de comentarios #}
 
 <div id="desplegar_panel_comentarios"></div>
@@ -84,36 +98,52 @@
         <button id="btn-cerrar-comentarios" title="Cerrar el panel de comentarios">X</button>
     </div>
 
-    <!-- Para añadir un comentario -->
-    <button id="btn-aniadir-comentario">Añadir un comentario</button>
+    {% if session.nick %} <!-- Si el usuario ha iniciado sesión, puede añadir un comentario -->
 
-    <form id="form-comentario" class="oculto">
-        <h4>Introduzca los siguientes datos:</h4>
+        <!-- Para añadir un comentario -->
+        <button id="btn-aniadir-comentario">Añadir un comentario</button>
 
-        <label for="f-nombre">Nombre:</label>
-        <input type="text" id="nombre" name="nombre">
+        <form id="form-comentario" class="oculto">
+            <h4>Introduzca los siguientes datos:</h4>
 
-        <label for="f-email">E-mail:</label>
-        <input type="text" id="email" name="email">
+            <label for="f-nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre">
 
-        <label for="f-texto-comentario">Comentario:</label>
-        <textarea id="texto-comentario" name="texto-comentario" rows="4"></textarea>
+            <label for="f-email">E-mail:</label>
+            <input type="text" id="email" name="email">
 
-        <!-- Botones para enviar o cancelar comentario -->
-        <button type="submit" id="btn-enviar-comentario">Enviar</button>
-        <button type="button" id="btn-cancelar-comentario">Cancelar</button>
-    </form>
+            <label for="f-texto-comentario">Comentario:</label>
+            <textarea id="texto-comentario" name="texto-comentario" rows="4"></textarea>
 
+            <!-- Botones para enviar o cancelar comentario -->
+            <button type="submit" id="btn-enviar-comentario">Enviar</button>
+            <button type="button" id="btn-cancelar-comentario">Cancelar</button>
+        </form>
+    
+    {% else %}
+            
+        <div class="aviso-login-comentarios">
+            <p>⚠️ Debes <strong>iniciar sesión</strong> en el menú superior para poder escribir un comentario.</p>
+        </div>
+
+    {% endif %}
 
 
     <!-- Lista de comentarios de otras personas -->
     <div id="lista-comentarios">
         {% for comentario in comentarios %}
-        <div class="comentario">
+        <div class="comentario" data-id="{{ comentario.id }}">
             <h4>{{ comentario.nombre }}</h4>
             <p class="email-comentario">{{ comentario.email }}</p>
-            <p>{{ comentario.texto }}</p>
+            <p class="texto-del-comentario">{{ comentario.texto }}</p>
             <p class="fecha-comentario">{{ comentario.fecha_hora }}</p>
+
+            {% if session.rol == 'moderador' or session.rol == 'superusuario' %}
+            <div class="acciones-comentario">
+                <button class="btn-editar-comentario btn-pequeno">Editar</button>
+                <button class="btn-borrar-comentario btn-pequeno btn-peligro">Eliminar</button>
+            </div>
+            {% endif %}
         </div>
         {% else %}
         <p>Aún no hay comentarios. ¡Anímate a ser el primero!</p>
@@ -129,18 +159,4 @@
     <button id="btn-aceptar-msg-error">Aceptar</button>
 </div>
 
-</article>
-
-{% endblock %}
-
-{% block scripts_extra %}
-<!-- Insertamos variables dinámicas desde PHP para que JS pueda utilizarlas -->
-<script>
-    const BASE_URL = "{{ constant('BASE_URL') }}";
-    const EVENTO_ID = {{ evento.id }};
-    const localidades = {{ localidades|json_encode|raw }};
-</script>
-
-<!-- Añado el archivo de JavaScript -->
-<script src="{{ constant('BASE_URL') }}js/index.js"></script>
 {% endblock %}

@@ -1,7 +1,5 @@
 /* estilos.css */
 
-
-
 /* ==========================================================================
    ESTILOS GENERALES
    ========================================================================== */
@@ -10,11 +8,14 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Regla general para ocultar elementos */
+.oculto {
+    display: none !important; 
+}
+
 body {
     /* Le decimos al body que funcione como una cuadrícula */
     display: grid; 
-
-    
 
     /* Imagen de fondo */
     background-image: url("../images/Santiago_de_la_Espada.jpeg");
@@ -54,7 +55,7 @@ header { /* Selector de elemento */
     justify-content: space-evenly;
     align-items: center;
     align-content: stretch;
-    gap: 30px;
+    gap: 20px;
 }
 
 #logo-principal { /* Selector de ID */
@@ -76,32 +77,176 @@ header { /* Selector de elemento */
 
 .menu-cabecera { /* Selector de clase */
     list-style: none;
-    /* Para que no ocupe espacio extra invisible por los márgenes/paddings */
-    padding: 0;
-    margin: 0;
-
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 5px;
+    padding: 0;
+    margin: 0;
+    align-items: center;  
 }
 
-.menu-cabecera a { /* Para darle estilo a los enlaces del menú de cabecera */
-    font-size: 90%;
-    color: #2052a2;
-    text-decoration: none; /* Para quitar el subrayado de los enlaces */
-    padding: 10px 20px; /* Relleno interior. 10px arriba/abajo, 20px a los lados */;
+.menu-cabecera li a.button_menu { /* Para darle estilo a los enlaces del menú de cabecera */
+    text-decoration: none; /* Quitamos el subrayado del enlace */
+    display: inline-block;
 }
 
+/* Información del usuario */
+.zona-usuario {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.zona-usuario p {
+    margin: 5px 0;
+}
+
+.zona-usuario .button_menu{
+    padding: 5px 12px !important;   /* Relleno muy pequeño arriba/abajo y lados */
+    font-size: 12px !important;     /* Letra un punto más pequeña que los otros */
+    
+    /* Quitamos el comportamiento de estirarse y definimos un ancho mínimo muy pequeño */
+    min-width: 110px !important; 
+    width: auto !important;         /* Evita que flexbox lo obligue a expandirse */
+    
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+/* --- Ajuste de tamaño para los botones que están DENTRO del header --- */
+header .button_menu {
+    padding: 6px 14px;
+    font-size: 13px;
+    text-decoration: none;
+    
+    /* Convertimos el propio botón en un contenedor Flex para centrar el texto */
+    display: inline-flex;
+    justify-content: center; /* Centra el texto horizontalmente */
+    align-items: center;     /* Centra el texto verticalmente */
+    text-align: center;
+    
+    /* Definimos un ancho mínimo común para que todos midan lo mismo */
+    min-width: 210px; 
+    box-sizing: border-box; /* Asegura que el padding no rompa el ancho mínimo */
+    transition: background-color 0.2s ease; /* Transición suave al pasar el ratón */
+}
+
+/* --- Botón de login --- */
+/* Tiene un estilo "invertido" al del resto de botones para destacar más */
+.button_menu.btn-login {
+    background-color: white !important;
+    color: #007bff !important; /* El azul que usas en button_menu */
+    font-weight: bold;
+}
+
+.button_menu.btn-login:hover {
+    background-color: rgb(163, 206, 250) !important;
+    color: white !important;
+}
+
+/* --- Modal de Login --- */
+#modal-login {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Fondo oscuro semitransparente que cubre TODA la pantalla */
+    background-color: rgba(0, 0, 0, 0.7); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+/* Cuando el modal tiene la clase oculto, desaparece */
+#modal-login.oculto {
+    display: none;
+}
+
+.contenido-modal {
+    background-color: white; /* Cambiado de #2f2f2f a blanco */
+    color: #333;            /* Texto oscuro para que se lea en blanco */
+    padding: 30px;
+    width: 320px;
+    border: 1px solid #ccc; /* Un borde más sutil que el blanco anterior */
+    text-align: center;
+    box-shadow: 0 5px 15px black;
+}
+
+.contenido-modal h3 {
+    color: #007bff;
+    margin-top: 0;
+}
+
+.campo-formulario-login label {
+    display: block;
+    margin-bottom: 5px;
+    text-align: left;
+    color: #555;
+}
+
+.campo-formulario-login input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9; /* gris claro para el fondo del input */
+}
+
+.campo-formulario-login {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+/* Texto de error */
+.error-texto {
+    color: #ff4d4d;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+}
+
+.error-texto.oculto {
+    display: none;
+}
+
+/* Botones del modal */
+.botones-modal {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.btn-primario, .btn-secundario {
+    padding: 8px 20px;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-primario {
+    background-color: #28a745; /* Verde éxito */
+    color: white;
+}
+
+.btn-secundario {
+    background-color: #dc3545; /* Rojo peligro */
+    color: white;
+}
 
 /* ------------------------- ASIDE ----------------------------------- */
 
-aside  { 
+#aside-lateral { /* Selector de ID */
     grid-area: sidebar;
     background-color: rgba(248, 245, 230, 0.65);
     border-radius: 7px;
 }
 
-aside ul { /* Selector descendente */
+#aside-lateral ul { /* Selector descendente */
     list-style: none;
     padding: 0;
     margin: 0;
@@ -314,6 +459,32 @@ article.evento .titulo-fecha-evento h2 {
     color: #2052a2;
 }
 
+/* Estilos para los hashtags del evento */
+.contenedor-hashtags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    
+}
+
+.hashtag-etiqueta {
+    background-color: rgb(163, 206, 250);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    border: 1px solid #ccc;
+    align-items: flex-start;
+}
+
+.hashtag-etiqueta:hover {
+    transform: scale(1.05); /* Efecto sutil al pasar el ratón por encima */
+    cursor: default;
+}
+
 /* Zona de los enlaces del header */
 article.evento .enlaces-evento ul {
     list-style: none;
@@ -464,9 +635,10 @@ article.evento .galeria-imagenes h3 {
     position: fixed; /* Para que se quede fijo en la pantalla al hacer scroll */
     top: 0;
     right: 0;
-    width: 10px;    /* Ancho del área sensible para desplegar el panel */
+    width: 15px;    /* Ancho del área sensible para desplegar el panel */
     height: 100vh;  /* Para que ocupe toda la altura de la pantalla */ 
     z-index: 99;    /* Para que esté por encima de otros elementos pero por debajo del panel de comentarios */
+    /* background-color: red; Solo para visualizar el área sensible, luego se puede quitar o hacer transparente */
 }
 
 /* El panel lateral principal */
@@ -489,7 +661,7 @@ article.evento .galeria-imagenes h3 {
     overflow-y: auto;
     
     /* Animación suave al entrar/salir */
-    transition: transform 0.4s ease-in-out; 
+    transition: transform 0.4s ease-in-out !important; 
 }
 
 /* La clase 'oculto' (Indica si el panel se encuentra oculto) */
@@ -659,4 +831,783 @@ article.evento .galeria-imagenes h3 {
 
 #btn-aceptar-msg-error:hover {
     background-color: #173d7a; /* Un azul un poco más oscuro al pasar el ratón */
+}
+
+/* Aviso en comentarios para usuarios anónimos */
+.aviso-login-comentarios {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 14px;
+}
+
+/* Botones del Moderador: Eliminar o Editar comentario */
+.acciones-moderador {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end; /* Los pegamos a la derecha */
+}
+
+.btn-pequeno {
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-peligro {
+    background-color: #dc3545; /* Rojo para borrar */
+}
+
+.btn-pequeno:hover {
+    opacity: 0.8;
+}
+
+/* ==========================================================================
+    PÁGINA DE PERFIL DE USUARIO - PRÁCTICA 4    
+   ========================================================================== */
+/* Estilos para la sección de Perfil */
+.contenedor-perfil {
+    max-width: 500px;
+    margin: 40px auto;
+    background-color: #666565;
+    padding: 30px;
+    border-radius: 8px;
+    color: #fff;
+    border: 1px solid #444;
+}
+
+.campo-formulario, .campo-formulario-password {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.campo-formulario label, .campo-formulario-password label {
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.campo-formulario input, .campo-formulario-password input {
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #666;
+    background-color: #222;
+    color: #fff;
+}
+
+.ayuda-input {
+    color: #c3c3c3;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.alerta-exito {
+    background-color: #28a745;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.alerta-error {
+    background-color: #dc3545;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.botones-perfil {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+/* ==========================================================================
+    GESTIÓN GLOBAL DE COMENTARIOS (MODERADOR o SUPERUSUARIO) - PRÁCTICA 4
+   ========================================================================== */
+.contenedor-gestion-comentarios {
+    background-color: rgba(0, 0, 0, 0.6);
+    /* background-color: #666565; */
+    padding: 20px;
+    border-radius: 8px;
+    color: white;
+}
+
+/* Estilos del buscador */
+.formulario-filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 30px;
+    background-color: #373737;
+    padding: 15px;
+    border-radius: 8px;
+    align-items: center;
+}
+
+.campo-filtro input {
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #666;
+    background-color: #222;
+    color: white;
+    width: 250px;
+}
+
+.botones-filtro {
+    display: flex;
+    gap: 10px;
+}
+
+/* Estilos de la cuadrícula de tarjetas */
+.zona-comentarios-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Tarjetas responsive */
+    gap: 20px;
+}
+
+.tarjeta-comentario-admin {
+    background-color: rgba(248, 245, 230, 0.95);
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    color: #333; 
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: transform 0.2s ease;
+}
+
+.tarjeta-comentario-admin:hover {
+    transform: translateY(-5px); /* Pequeño efecto al pasar el ratón */
+}
+
+.tarjeta-comentario-admin .cabecera-tarjeta {
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.tarjeta-comentario-admin .cabecera-tarjeta h4 {
+    margin: 0;
+    font-size: 18px;
+    color: #000;
+}
+
+.tarjeta-comentario-admin .email-comentario {
+    font-size: 12px;
+    color: #555;
+}
+
+.tarjeta-comentario-admin .evento-origen {
+    background-color: #e9ecef;
+    padding: 5px 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    font-size: 13px;
+}
+
+.tarjeta-comentario-admin .cuerpo-tarjeta {
+    flex-grow: 1; /* Para empujar los botones hacia abajo si hay poco texto */
+    margin-bottom: 15px;
+    font-style: italic;
+}
+
+.alerta-aviso {
+    background-color: #fff3cd;
+    color: #856404;
+    padding: 15px;
+    border-radius: 5px;
+    grid-column: 1 / -1; /* Para que ocupe todo el ancho si no hay resultados */
+    text-align: center;
+}
+
+/* ==========================================================================
+    PANEL DEL GESTOR DE EVENTOS
+   ========================================================================== */
+.contenedor-gestor {
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 25px;
+    border-radius: 8px;
+    color: white;
+}
+
+.acciones-superiores {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.btn-anadir-evento {
+    padding: 10px 20px;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+/* --- BUSCADOR INTEGRADO --- */
+.buscador-gestor {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.grupo-buscador-unido {
+    display: flex;
+    border-radius: 25px;
+    overflow: hidden;
+    background-color: #fff;
+    border: 2px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.grupo-buscador-unido input {
+    border: none;
+    padding: 10px 15px;
+    width: 250px;
+    outline: none;
+    font-size: 14px;
+    background-color: transparent;
+    color: #333;
+}
+
+.grupo-buscador-unido select {
+    border: none;
+    border-left: 1px solid #ddd;
+    padding: 10px;
+    background-color: #f9f9f9;
+    outline: none;
+    cursor: pointer;
+    color: #333;
+}
+
+.grupo-buscador-unido .btn-buscar-lupa {
+    background-color: #3b5998;
+    border: none;
+    color: white;
+    padding: 0 20px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-limpiar-busqueda {
+    color: #ffcccc;
+    text-decoration: underline;
+    font-size: 14px;
+}
+
+/* --- NUEVAS TARJETAS BI-ZONA DEL LISTADO DE EVENTOS --- */
+.zona-eventos-gestor {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.tarjeta-evento-gestor {
+    background-color: rgba(248, 245, 230, 0.95); /* Fondo beige de tu diseño */
+    color: #333;
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;          /* Alineación en fila (izq cartel, der contenido) */
+    gap: 20px;
+    border: 1px solid #ccc;
+    align-items: flex-start; /* Alinea los elementos al principio superior */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Contenedor estricto para que las proporciones del cartel no se deformen */
+.contenedor-cartel-gestor {
+    flex-shrink: 0;         /* Impide que la imagen colapse o encoja */
+    width: 110px;
+    height: 145px;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid #bbb;
+    background-color: #ddd;
+}
+
+.imagen-cartel-gestor {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;      /* Recorta y ajusta la imagen de forma elegante */
+}
+
+/* Zona derecha de información */
+.info-evento-gestor {
+    flex-grow: 1;           /* Hace que use el 100% del espacio libre a la derecha */
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.cabecera-info-gestor {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cabecera-info-gestor h3 {
+    margin: 0;
+    font-size: 19px;
+    color: #000;
+}
+
+.acciones-evento-gestor {
+    display: flex;
+    gap: 8px;
+}
+
+.acciones-evento-gestor a {
+    text-decoration: none;
+}
+
+/* Fila de etiquetas informativas */
+.metadatos-gestor {
+    display: flex;
+    gap: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    flex-wrap: wrap;
+    margin-bottom: 2px;
+}
+
+.meta-tag-gestor {
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+/* Descripción del evento */
+.descripcion-corta-gestor {
+    margin: 4px 0;
+    font-size: 14px;
+    color: #444;
+    line-height: 1.4;
+}
+
+/* Zona de hashtags */
+.contenedor-hashtags-gestor {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+}
+
+.hashtag-etiqueta-gestor {
+    background-color: #3b5998;
+    color: white;
+    padding: 1px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+/* ==========================================================================
+    FORMULARIO DE AÑADIR/EDITAR EVENTO
+   ========================================================================== */
+.formulario-gestor {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.form-evento {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    color: #333;
+}
+
+.grupo-form {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.grupo-form label {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.grupo-form input[type="text"],
+.grupo-form input[type="date"],
+.grupo-form select,
+.grupo-form textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 15px;
+}
+
+.fila-form {
+    display: flex;
+    gap: 15px;
+}
+
+.fila-form .grupo-form {
+    flex: 1; /* Para que ocupen lo mismo */
+}
+
+.separador-form {
+    border: none;
+    border-top: 2px dashed #ccc;
+    margin: 15px 0;
+}
+
+.zona-archivos {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* Previsualización del cartel */
+.preview-imagen img {
+    max-width: 150px;
+    border-radius: 4px;
+    border: 1px solid #bbb;
+    margin-bottom: 10px;
+}
+
+/* Previsualización de la galería */
+.grid-galeria-mini {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+
+.item-galeria-mini {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    background: #eee;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.item-galeria-mini img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 2px;
+}
+
+.item-galeria-mini label {
+    font-size: 12px;
+    color: #cc0000;
+    cursor: pointer;
+}
+
+.botones-formulario {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* ==========================================================================
+   BOTONES DE ACCIÓN EN EL GESTOR (EDITAR Y ELIMINAR)
+   ========================================================================== */
+.acciones-evento-gestor a {
+    text-decoration: none !important; /* Para quitar cualquier subrayado que pueda tener el enlace */
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    color: white !important; /* Fuerza la letra blanca, quitando el morado/azul */
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+/* Estilo para el botón de Editar */
+.btn-editar-evento {
+    background-color: #007bff; /* Azul profesional */
+    border: 1px solid #0056b3;
+}
+
+.btn-editar-evento:hover {
+    background-color: #0056b3; /* Azul más oscuro al pasar el ratón */
+}
+
+/* Estilo para el botón de Eliminar */
+.btn-borrar-evento {
+    background-color: #dc3545; /* Rojo de peligro */
+    border: 1px solid #c82333;
+}
+
+.btn-borrar-evento:hover {
+    background-color: #c82333; /* Rojo más oscuro al pasar el ratón */
+}
+
+/* ==========================================================================
+   PANEL DE SUPERUSUARIO (GESTIÓN DE USUARIOS)
+   ========================================================================== */
+
+/* Contenedor principal de la tabla */
+.zona-tabla-usuarios {
+    margin-top: 20px;
+    background-color: white !important; /* Fondo blanco de la caja */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    color: #333 !important; /* Forzamos color oscuro para párrafos y textos generales aquí dentro */
+}
+
+/* Estilos específicos de la tabla */
+.tabla-administracion {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    background-color: white; /* Aseguramos fondo blanco en la tabla */
+}
+
+.tabla-administracion thead tr {
+    border-bottom: 2px solid #ddd;
+    background-color: #f2f2f2; /* Gris clarito para la cabecera */
+}
+
+.tabla-administracion th {
+    padding: 12px;
+    font-weight: bold;
+    color: #555 !important; /* Encabezados en gris oscuro */
+}
+
+.tabla-administracion tbody tr {
+    border-bottom: 1px solid #eee;
+}
+
+/* Forzamos el color negro/oscuro en todas las celdas del cuerpo */
+.tabla-administracion tbody td {
+    padding: 12px;
+    color: #333 !important; /* Letras oscuras para que se lean sobre blanco */
+}
+
+.tabla-administracion .nick-usuario {
+    font-weight: bold;
+    color: black !important; /* Nick en negro puro */
+}
+
+.tabla-administracion .celda-centrada {
+    text-align: center;
+}
+
+/* Botón de acción dentro de la tabla */
+.btn-modificar-usuario {
+    padding: 6px 12px;
+    font-size: 13px;
+    text-decoration: none;
+    border-radius: 4px;
+    display: inline-block;
+    /* Este hereda .btn-primario, por lo que su letra seguirá siendo blanca sobre fondo azul */
+}
+
+/* Colores dinámicos para los roles (estos SÍ mantienen letra blanca) */
+.rol-tag {
+    color: white !important; /* Forzamos letra blanca SOBRE el fondo de color */
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.rol-superusuario { background-color: #d9534f; } /* Rojo */
+.rol-gestor       { background-color: #f0ad4e; } /* Naranja */
+.rol-moderador    { background-color: #5bc0de; } /* Azul */
+.rol-registrado   { background-color: #5cb85c; } /* Verde */
+
+/* Contenedor del mensaje de error crítico (Borrado de último Superusuario) */
+.contenedor-error-critico {
+    text-align: center;
+    padding: 50px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Título de la alerta crítica */
+.titulo-error-critico {
+    color: #dc3545; /* Rojo de peligro */
+    margin-bottom: 15px;
+}
+
+/* Botón de retorno en la pantalla de error */
+.btn-error-critico {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #333;
+    color: white !important;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+.btn-error-critico:hover {
+    background-color: #555;
+}
+
+/* Botón específico para la acción de Eliminar Usuario en la tabla */
+.btn-eliminar-usuario {
+    background-color: #dc3545 !important; 
+    color: white !important;
+    margin-left: 5px;
+}
+
+.btn-eliminar-usuario:hover {
+    background-color: #bd2130 !important;
+}
+
+/* ==========================================================================
+    PANTALLA DE REGISTRO DE USUARIOS
+   ========================================================================== */
+
+/* Centramos el formulario para que no ocupe toda la pantalla */
+.contenedor-registro {
+    max-width: 500px;
+    margin: 40px auto;
+}
+
+/* Cajas de mensajes de estado */
+.alerta-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px 15px;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.alerta-exito {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 20px;
+    border: 1px solid #c3e6cb;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* ==========================================================================
+    ZONA DE GESTIÓN DE HASHTAGS
+   ========================================================================== */
+
+/* Bloque contenedor del formulario de creación */
+.bloque-crear-hashtag {
+    background-color: rgba(248, 245, 230);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 25px;
+}
+
+.bloque-crear-hashtag h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333333;
+    font-size: 16px;
+}
+
+/* Formulario inline para que el input y el botón se alineen juntos */
+.form-lineal-hashtag {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Grupo del input que incluye el símbolo '#' visual */
+.grupo-input-hashtag {
+    display: flex;
+    align-items: center;
+    background-color: #f8f9fa;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    padding-left: 12px;
+    flex-grow: 1;
+    max-width: 400px;
+}
+
+.prefijo-hashtag {
+    font-size: 18px;
+    font-weight: bold;
+    color: #888888;
+    user-select: none; /* Evita que el usuario seleccione el '#' por error */
+}
+
+.grupo-input-hashtag input {
+    border: none;
+    background: transparent;
+    padding: 10px 8px;
+    font-size: 15px;
+    width: 100%;
+    outline: none; /* Elimina el borde azul por defecto al hacer foco */
+}
+
+/* Botón específico para añadir etiquetas */
+.btn-anadir-hashtag {
+    padding: 11px 20px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Contenedor de la tabla */
+.zona-tabla-hashtags {
+    background: rgba(248, 245, 230);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilización visual del hashtag dentro de la tabla */
+.tag-hashtag-visual {
+    background-color: #e8f4fd;
+    color: #1da1f2;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 14px;
+    border: 1px solid #d2e9fb;
+    display: inline-block;
+}
+
+/* Botón de eliminar con color de peligro profesional (Rojo) */
+.btn-eliminar-hashtag {
+    background-color: #d9534f;
+    color: #ffffff !important; /* Fuerza la letra blanca */
+    text-decoration: none !important;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: bold;
+    display: inline-block;
+    transition: background-color 0.2s ease;
+}
+
+.btn-eliminar-hashtag:hover {
+    background-color: #c9302c;
+}
+
+/* Mensaje cuando la tabla no tiene elementos */
+.tabla-vacia {
+    padding: 30px !important;
+    text-align: center;
+    color: #777777;
+    font-style: italic;
 }

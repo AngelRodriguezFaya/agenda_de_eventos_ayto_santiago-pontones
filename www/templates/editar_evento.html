@@ -1,0 +1,100 @@
+{# templates/editar_evento.html #}
+{% extends "padre.html" %}
+
+{% block titulo %}
+    {% if evento %}Editar Evento: {{ evento.titulo }}{% else %}Añadir Nuevo Evento{% endif %} - Gestor
+{% endblock %}
+
+{% block central %}
+<section class="contenedor-gestor formulario-gestor">
+    <h2>{% if evento %}Editar Evento{% else %}Añadir Nuevo Evento{% endif %}</h2>
+    
+    <form action="{{ constant('BASE_URL') }}guardar_evento.php" method="POST" enctype="multipart/form-data" class="form-evento">
+        
+        <input type="hidden" name="id_evento" value="{{ evento.id }}">
+
+        <div class="grupo-form">
+            <label for="titulo">Título del Evento:</label>
+            <input type="text" id="titulo" name="titulo" value="{{ evento.titulo }}" required>
+        </div>
+
+        <div class="fila-form">
+            <div class="grupo-form">
+                <label for="fecha_realizacion">Fecha de realización:</label>
+                <input type="date" id="fecha_realizacion" name="fecha_realizacion" 
+                    value="{{ evento.fecha_realizacion ? evento.fecha_realizacion|date('Y-m-d') : '' }}" required>
+            </div>
+
+            <div class="grupo-form">
+                <label for="categoria">Categoría:</label>
+                <select id="categoria" name="categoria_id" required>
+                    <option value="">-- Selecciona Categoría --</option>
+                    {% for cat in categorias %}
+                        <option value="{{ cat.id }}" {% if evento.categoria_id == cat.id %}selected{% endif %}>{{ cat.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="grupo-form">
+                <label for="localidad">Localidad:</label>
+                <select id="localidad" name="localidad_id" required>
+                    <option value="">-- Selecciona Localidad --</option>
+                    {% for loc in localidades %}
+                        <option value="{{ loc.id }}" {% if evento.localidad_id == loc.id %}selected{% endif %}>{{ loc.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="grupo-form">
+            <label for="descripcion">Descripción:</label>
+            <textarea id="descripcion" name="descripcion" rows="6" required>{{ evento.descripcion }}</textarea>
+        </div>
+
+        <div class="grupo-form">
+            <label for="hashtags">Hashtags (separados por comas):</label>
+            <input type="text" id="hashtags" name="hashtags" value="{{ hashtags_string }}" placeholder="Ej: Música, Cultura, Gratis">
+            <small>Escribe las etiquetas separadas por una coma. No hace falta poner el símbolo #.</small>
+        </div>
+
+        <hr class="separador-form">
+        <h3>Gestión de Imágenes</h3>
+
+        <div class="grupo-form zona-archivos">
+            <label for="cartel">Cartel Principal del Evento:</label>
+            {% if cartel_actual %}
+                <div class="preview-imagen">
+                    <img src="{{ constant('BASE_URL') }}{{ cartel_actual.ruta_imagen }}" alt="Cartel actual">
+                    <p>Cartel actual. Si subes uno nuevo, este será reemplazado.</p>
+                </div>
+            {% endif %}
+            <input type="file" id="cartel" name="cartel" accept="image/*">
+        </div>
+
+        <div class="grupo-form zona-archivos">
+            <label for="galeria">Imágenes para la Galería (Puedes seleccionar varias a la vez):</label>
+            
+            {% if galeria_actual %}
+                <div class="preview-galeria">
+                    <p>Imágenes actuales en la galería:</p>
+                    <div class="grid-galeria-mini">
+                        {% for img in galeria_actual %}
+                            <div class="item-galeria-mini">
+                                <img src="{{ constant('BASE_URL') }}{{ img.ruta_imagen }}" alt="Imagen de galería">
+                                <label><input type="checkbox" name="borrar_imagen[]" value="{{ img.id }}"> Borrar</label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+            
+            <input type="file" id="galeria" name="galeria[]" accept="image/*" multiple>
+        </div>
+
+        <div class="botones-formulario">
+            <a href="{{ constant('BASE_URL') }}gestor.php" class="btn-secundario">Cancelar</a>
+            <button type="submit" class="btn-primario">{% if evento %}Guardar Cambios{% else %}Crear Evento{% endif %}</button>
+        </div>
+    </form>
+</section>
+{% endblock %}

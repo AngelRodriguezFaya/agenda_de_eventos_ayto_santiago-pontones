@@ -21,7 +21,7 @@
     <meta name="robots" content="index"> <!-- Para aperecer en el buscador -->
 </head>
 
-<body> 
+<body data-base-url="{{ constant('BASE_URL') }}">
 
     <header> <!-- Zona de encabezado -->
 
@@ -34,39 +34,95 @@
             <h1 id="titulo-principal">Agenda de Eventos · Excmo. Ayuntamiento de Santiago Pontones.</h1>
         </span>
 
-        <!-- Enlaces -->
+        <!-- Barra de navegación -->
         <nav class="navbar">
+            <!-- Información del usuario -->
+            <div class="zona-usuario">
+                {% if session.nick %}
+                    <p>Hola! 👋 {{ session.nick }} ({{ session.rol }})</p>
+                    <button id="btn-logout" class="button_menu">Cerrar sesión</button>
+                {% else %}
+                    <p>Hola! 👋 usuario anónimo</p>
+                    <button id="btn-abrir-login" class="button_menu btn-login">Iniciar sesión</button>
+                {% endif %}
+            </div>
+
+            <!-- Enlaces -->
             <ul class ="menu-cabecera">
 
                 <li>
-                    <a href="https://www.santiagopontones.es/el-municipio/fiestas/" target="_blank" rel="noopener noreferrer"
+                    <a href="https://www.santiagopontones.es/el-municipio/fiestas/" class="button_menu" target="_blank" rel="noopener noreferrer"
                         title="Ir a la página sobre Fiestas."> Página sobre las Fiestas Populares.
                     </a>
                 </li>
 
                 <li>
-                    <a href="https://santiagopontones.bracelit.es/" target="_blank" rel="noopener noreferrer"
+                    <a href="https://santiagopontones.bracelit.es/" class="button_menu" target="_blank" rel="noopener noreferrer"
                         title="Ir a la página del área de deportes."> Página del área de deportes.
                     </a>
                 </li>
 
                 <li>
-                    <a href="https://www.santiagopontones.es/blog/noticias/" target="_blank" rel="noopener noreferrer"
+                    <a href="https://www.santiagopontones.es/blog/noticias/" class="button_menu" target="_blank" rel="noopener noreferrer"
                         title="Ir a la página de noticias."> Descubre las últimas noticias.
                     </a>
                 </li>
             </ul>
         </nav>
 
+        
     </header>
 
-    <aside> <!-- Menú lateral -->
+    <aside id="aside-lateral"> <!-- Menú lateral -->
 
         <nav class="menu-lateral">
             <ul>
-                <li><button class="button_menu" onclick="alert('En construcción!')">Menú 1</button></li>
-                <li><button class="button_menu" onclick="alert('En construcción!')">Menú 2</button></li>
-                <li><button class="button_menu" onclick="alert('En construcción!')">Menú 3</button></li>
+                <!-- <li><button class="button_menu" onclick="alert('En construcción!')">Menú 1</button></li>
+                <li><button class="button_menu" onclick="alert('En construcción!')">Menú 2</button></li> -->
+
+                {% if session.nick is not defined %}
+                    <li>
+                        <button type="button" class="button_menu" onclick="window.location.href='{{ constant('BASE_URL') }}registro.php'">
+                            Registrarse
+                        </button>
+                    </li>
+                {% else %}
+
+                    <li>
+                        <button type="button" class="button_menu" onclick="window.location.href='{{ constant('BASE_URL') }}perfil.php'">
+                            Mi Perfil
+                        </button>
+                    </li>
+                
+                    {% if session.rol == 'gestor' or session.rol == 'superusuario' %}                
+                        <li>
+                            <button type="button" class="button_menu" onclick="window.location.href='{{ constant('BASE_URL') }}gestor.php'">
+                                Gestión de Eventos
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" class="button_menu" onclick="window.location.href='{{ constant('BASE_URL') }}gestor_hashtags.php'">
+                                Gestión de Hashtags
+                            </button>
+                        </li>
+                    {% endif %}
+
+                    {% if session.rol == 'moderador' or session.rol == 'superusuario' %}                
+                        <li>
+                            <button type="button" class="button_menu" onclick="window.location.href='{{ constant('BASE_URL') }}comentarios.php'">
+                                Gestión de Comentarios
+                            </button>
+                        </li>
+                    {% endif %}
+                    
+                    {% if session.rol == 'superusuario' %}                
+                        <li>
+                            <button type="button" class="button_menu" onclick="window.location.href='{{ constant('BASE_URL') }}superusuario.php'">
+                                Gestión de Usuarios
+                            </button>
+                        </li>
+                    {% endif %}
+                {% endif %}
             </ul>
         </nav>
 
@@ -91,6 +147,35 @@
         </section>
 
     </footer>
+
+    <!-- Diálogo modal para login -->
+    <div id="modal-login" class="oculto">
+        <div class="contenido-modal">
+            <h3>Iniciar Sesión</h3>
+            
+            <form id="form-login">
+                <div class="campo-formulario-login">
+                    <label for="login-nick">Nick:</label>
+                    <input type="text" id="login-nick" name="nick" required>
+                </div>
+                
+                <div class="campo-formulario-login">
+                    <label for="login-password">Contraseña:</label>
+                    <input type="password" id="login-password" name="password" required>
+                </div>
+                
+                <p id="login-error-msg" class="error-texto oculto">ERROR: Credenciales incorrectas</p>
+                
+                <div class="botones-modal">
+                    <button type="submit" id="btn-enviar-login" class="btn-primario">Entrar</button>
+                    <button type="button" id="btn-cerrar-login" class="btn-secundario">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Añado el script de JavaScript básico -->
+    <script src="{{ constant('BASE_URL') }}js/index.js"></script>
 
     {# Bloque para el JS específico de cada página #}
     {% block scripts_extra %}{% endblock %}

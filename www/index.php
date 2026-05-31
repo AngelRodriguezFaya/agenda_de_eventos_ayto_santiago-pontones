@@ -1,10 +1,18 @@
 <?php
+
+// Iniciamos las sesiones para manejar el estado del usuario
+session_start();
+
 require_once '/usr/local/lib/php/vendor/autoload.php';
 require_once 'bd.php'; // Incluimos la clase BD
 
 // 1. Configuración de Twig
 $loader = new \Twig\Loader\FilesystemLoader('templates');
 $twig = new \Twig\Environment($loader);
+
+// Pasamos la sesión como una variable global a Twig para no
+// tener que pasarla en cada renderizado
+$twig->addGlobal('session', $_SESSION);
 
 // 2. Validación y Sanitización de entradas
 // filter_input nos asegura que recibimos un entero o nos devuelve false/null
@@ -21,6 +29,7 @@ if ($evento_id !== null && $evento_id !== false) {
         $galeria = BD::getGaleria($evento_id);
         $comentarios = BD::getComentarios($evento_id);
         $localidades = BD::getListaLocalidades(); // Es necesario para el script JS
+        $hashtags = BD::getHashtagsEvento($evento_id); 
 
         // Elegimos la plantilla según si se ha pedido la versión para imprimir o no
         $plantilla = $imprimir ? 'evento_imprimir.html' : 'evento.html';
@@ -29,7 +38,8 @@ if ($evento_id !== null && $evento_id !== false) {
             'evento' => $evento,
             'galeria' => $galeria,
             'comentarios' => $comentarios,
-            'localidades' => $localidades
+            'localidades' => $localidades,
+            'hashtags' => $hashtags
         ]);
     } else {
         // En caso de que el usuario ponga un ID que no existe (ej: /evento/999)
@@ -46,3 +56,4 @@ if ($evento_id !== null && $evento_id !== false) {
         'eventos' => $eventos
     ]);
 }
+?>

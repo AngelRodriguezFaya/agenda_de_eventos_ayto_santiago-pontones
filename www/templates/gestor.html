@@ -1,0 +1,82 @@
+{# templates/gestor.html #}
+{% extends "padre.html" %}
+
+{% block titulo %}Panel de Gestión de Eventos - Agenda{% endblock %}
+
+{% block central %}
+<section class="contenedor-gestor">
+    <h2>Panel de Control de Eventos</h2>
+    <p>Administra, edita o crea nuevos eventos.</p>
+    
+    <div class="acciones-superiores">
+        <a href="{{ constant('BASE_URL') }}editar_evento.php" class="btn-primario btn-anadir-evento">+ Añadir Nuevo Evento</a>
+
+        <form action="{{ constant('BASE_URL') }}gestor.php" method="GET" class="buscador-gestor">
+            <div class="grupo-buscador-unido">
+                <input type="text" name="termino" placeholder="Buscar palabra clave..." value="{{ termino }}">
+                <select name="criterio">
+                    <option value="titulo" {% if criterio == 'titulo' %}selected{% endif %}>En Título</option>
+                    <option value="descripcion" {% if criterio == 'descripcion' %}selected{% endif %}>En Descripción</option>
+                    <option value="hashtag" {% if criterio == 'hashtag' %}selected{% endif %}>En Hashtags</option>
+                </select>
+                <button type="submit" class="btn-buscar-lupa">Buscar</button>
+            </div>
+            {% if termino is not empty %}
+                <a href="{{ constant('BASE_URL') }}gestor.php" class="btn-limpiar-busqueda">Limpiar</a>
+            {% endif %}
+        </form>
+    </div>
+
+    <div class="zona-eventos-gestor">
+        {% for evento in eventos %}
+            <div class="tarjeta-evento-gestor">
+                
+                <div class="contenedor-cartel-gestor">
+                    {% if evento.ruta_imagen %}
+                        <img src="{{ constant('BASE_URL') }}{{ evento.ruta_imagen }}" alt="Cartel de {{ evento.titulo }}" class="imagen-cartel-gestor">
+                    {% else %}
+                        <img src="{{ constant('BASE_URL') }}images/no-image.png" alt="Sin cartel" class="imagen-cartel-gestor">
+                    {% endif %}
+                </div>
+                
+                <div class="info-evento-gestor">
+                    <div class="cabecera-info-gestor">
+                        <h3>{{ evento.titulo }}</h3>
+                        <div class="acciones-evento-gestor">
+                            <a href="{{ constant('BASE_URL') }}editar_evento.php?id={{ evento.id }}" class="btn-editar-evento">Editar</a>
+                            <a href="{{ constant('BASE_URL') }}borrar_evento.php?id={{ evento.id }}" 
+                                class="btn-borrar-evento btn-peligro" 
+                                onclick="return confirm('¿Estás seguro de que deseas eliminar este evento y todas sus imágenes? Esta acción NO se puede deshacer.');">
+                                Eliminar
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="metadatos-gestor">
+                        <span class="meta-tag-gestor categoria-tag">{{ evento.categoria|default('Sin categoría') }}</span>
+                        <span class="meta-tag-gestor localidad-tag">📍 {{ evento.localidad|default('Sin localidad') }}</span>
+                        <span class="meta-tag-gestor fecha-tag">📅 {{ evento.fecha_realizacion }}</span>
+                    </div>
+                    
+                    <p class="descripcion-corta-gestor">
+                        {{ evento.descripcion }}
+                    </p>
+                    
+                    {% if evento.hashtags_list %}
+                        <div class="contenedor-hashtags-gestor">
+                            {% for h in evento.hashtags_list|split(',') %}
+                                <span class="hashtag-etiqueta-gestor">#{{ h }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+            </div>
+        {% else %}
+            <div class="alerta-aviso">
+                <p>No hay eventos que coincidan con la búsqueda.</p>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

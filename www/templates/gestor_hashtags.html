@@ -1,0 +1,57 @@
+{# templates/gestor_hashtags.html #}
+{% extends "padre.html" %}
+
+{% block titulo %}Gestión de Etiquetas (Hashtags) - Panel de Administración{% endblock %}
+
+{% block central %}
+<section class="contenedor-gestor">
+    <h2>Gestión de Etiquetas (Hashtags)</h2>
+    <p>Añade nuevos hashtags al sistema o elimina los existentes. Al eliminar un hashtag, este se desvinculará de todos los eventos automáticamente.</p>
+    
+    <div class="bloque-crear-hashtag">
+        <h3>Crear nueva etiqueta</h3>
+        <form action="{{ constant('BASE_URL') }}guardar_hashtag.php" method="POST" class="form-lineal-hashtag">
+            <div class="grupo-input-hashtag">
+                <span class="prefijo-hashtag">#</span>
+                <input type="text" id="etiqueta" name="etiqueta" placeholder="Ej: Naturaleza" required>
+            </div>
+            <button type="submit" class="btn-primario btn-anadir-hashtag">Añadir Hashtag</button>
+        </form>
+    </div>
+
+    <div class="zona-tabla-hashtags">
+        <table class="tabla-administracion">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Etiqueta</th>
+                    <th class="celda-centrada">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for hashtag in hashtags %}
+                    <tr>
+                        <td>{{ hashtag.id }}</td>
+                        <td>
+                            <span class="tag-hashtag-visual">#{{ hashtag.etiqueta }}</span>
+                        </td>
+                        <td class="celda-centrada">
+                            <a href="{{ constant('BASE_URL') }}borrar_hashtag.php?id={{ hashtag.id }}" 
+                                class="btn-eliminar-hashtag"
+                                onclick="return confirm('¿Estás seguro de que deseas eliminar el hashtag #{{ hashtag.etiqueta }}?');">
+                                Eliminar Hashtag
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="3" class="tabla-vacia">
+                            No se han encontrado hashtags en el sistema.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

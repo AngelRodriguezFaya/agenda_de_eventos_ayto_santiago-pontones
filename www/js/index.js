@@ -5,6 +5,9 @@
 //                          CONSTANTES Y DATOS INICIALES
 // ==========================================================================================================
 
+// Obtenemos la URL base 
+const BASE_URL = document.body.dataset.baseUrl || '/';
+
 const OCULTO_CLASS = 'oculto'; // Clase que indica que un elemento se debe ocultar
 
 // Opciones para formatear la fecha y hora en español
@@ -34,8 +37,8 @@ function ocultarElemento(elemento) {
 }
 
 
-// Limpia los campos del formulario y resetea los labels a su estado original
-function limpiarEltosFormulario(lNombre, lEmail, lTexto) {
+// Limpia los campos del formulario de los comentarios y resetea los labels a su estado original
+function limpiarEltosFormularioComen(lNombre, lEmail, lTexto) {
     document.getElementById('nombre').value = '';
     document.getElementById('email').value = '';
     document.getElementById('texto-comentario').value = '';
@@ -90,6 +93,14 @@ function esEmailValido(email) {
     return exprRegEmail.test(email);
 }
 
+/** Comprueba si una contraseña es fuerte: Mínimo 8 caracteres, al menos 1 letra y 1 número
+ *  Hace uso de una expresión regular que está ajustada para que no sea tan estricta que 
+ *  requiera mayúsculas obligatorias si no lo deseas, pero cumple el requisito estándar de "contraseña fuerte"
+ */
+function esPasswordFuerte(password) {
+    const regexPassword = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    return regexPassword.test(password);
+}
 
 // ==========================================================================================================
 //                              MANEJO DEL DOM 
@@ -97,6 +108,112 @@ function esEmailValido(email) {
 
 // Nos aseguramos de que el DOM esté completamente cargado antes de ejecutar nuestro código
 document.addEventListener("DOMContentLoaded", function() {
+
+    // ====================================================================
+    //                  1. CÓDIGO GLOBAL.
+    // ====================================================================
+
+    // --------------------------------------------------------------------
+    //      GESTIÓN DEL MODAL DE LOGIN (Funciona en todas las páginas)
+    // --------------------------------------------------------------------
+    const btnAbrirLogin = document.getElementById('btn-abrir-login');
+    const modalLogin = document.getElementById('modal-login');
+    const btnCerrarLogin = document.getElementById('btn-cerrar-login');
+
+    // ABRIR EL MODAL DE LOGIN
+    // Sólo añadimos el evento si el botón existe (si el usuario no ha iniciado sesión)
+    if(btnAbrirLogin && modalLogin){
+        btnAbrirLogin.addEventListener('click', function() {
+            // mostrarElemento(modalLogin);
+            modalLogin.classList.remove('oculto'); 
+        });
+    }
+
+    // CERRAR EL MODAL DE LOGIN 
+    // Igual, solo añadimos el evento si el botón existe
+    if(btnCerrarLogin && modalLogin){
+        btnCerrarLogin.addEventListener('click', function() {
+            // ocultarElemento(modalLogin);
+            modalLogin.classList.add('oculto');
+            // Limpiamos los campos del formulario de login
+            document.getElementById('login-nick').value = '';
+            document.getElementById('login-password').value = '';
+            document.getElementById('login-error-msg').style.display = 'none'; // Ocultamos el mensaje de error si estaba visible
+        });
+    }
+
+
+    // --------------------------------------------------------------------
+    //          PROCESAMIENTO DEL LOGIN (INICIO DE SESIÓN) CON AJAX
+    // --------------------------------------------------------------------
+
+    const formLogin = document.getElementById('form-login');
+    const mensajeErrorLogin = document.getElementById('login-error-msg');
+
+    if(formLogin) {
+        formLogin.addEventListener('submit', async function(event) {
+            event.preventDefault(); // Evitamos que el formulario recargue la página al hacer submit
+
+            const nickValor = document.getElementById('login-nick').value.trim();
+            const passwordValor = document.getElementById('login-password').value.trim();
+
+            try {
+                // Enviamos los datos al servidor y "esperamos" (await) la respuesta HTTP
+                const respuesta = await fetch(BASE_URL + 'api_login.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nick: nickValor, password: passwordValor })
+                });
+
+                // Si el servidor responde con un código de éxito (ej. 200 OK)
+                if (respuesta.ok) {
+                    // Recargamos la página para que Twig detecte la nueva $_SESSION y pinte el header con el usuario logueado
+                    window.location.reload();
+                } else {
+                    // Si el servidor responde con un error (ej. 401), mostramos el mensaje de error
+                    if (mensajeErrorLogin) {
+                        mostrarElemento(mensajeErrorLogin);
+                        mensajeErrorLogin.style.display = 'block'; // Nos aseguramos de que sea visible
+                    }
+                }
+            } catch (error) {
+                // Si hay un problema de red o el archivo PHP no existe, atrapamos el error aquí
+                console.error('Erro en la petición de login:', error);
+            }
+        });
+    }
+
+
+    // --------------------------------------------------------------------
+    //          PROCESAMIENTO DEL LOGOUT (CIERRE DE SESIÓN)
+    // --------------------------------------------------------------------
+    const btnLogout = document.getElementById('btn-logout');
+
+    if(btnLogout) {
+        btnLogout.addEventListener('click', async function(evento) {
+            evento.preventDefault(); // Evitamos que el enlace recargue la página
+
+            // Llamamos al archivo de PHP de logout
+            try{
+                const respuesta = await fetch(BASE_URL + 'api_logout.php');
+
+                if (respuesta.ok) {
+                    window.location.reload(); // Recargamos la página para que TWIG detecte que ya no hay $_SESSION
+                }
+            }catch(error) {
+                console.error('Error en la petición de logout:', error);
+            }
+        });
+    }
+
+
+    // ====================================================================
+    //                  2. CÓDIGO ESPECÍFICO.
+    // ====================================================================
+
+    // --------------------------------------------------------------------
+    //     GESTIÓN DE LOS COMENTARIOS (Sólo en evento.html)
+    // --------------------------------------------------------------------
 
     // -------- En primer lugar, capturamos los elementos del DOM -----------------------
     // Elementos relacionados con la apertura/cierre del panel de comentarios
@@ -124,6 +241,25 @@ document.addEventListener("DOMContentLoaded", function() {
     const campoNombre = document.getElementById('nombre')
     const campoEmail = document.getElementById('email');
     const campoTexto = document.getElementById('texto-comentario')
+
+    // Para las variables dinámicas guardadas en la BD
+
+        // 1. Localizamos el elemento que tiene los datos
+    const elementoEvento = document.getElementById('evento-detalle');
+
+        // 2. Si el elemento no existe, salimos para no dar error
+    if (!elementoEvento) return;
+
+        // 3. Extraemos los datos de los atributos 'data-'
+    const EVENTO_ID = elementoEvento.dataset.id;
+    // Ya no re-declaramos BASE_URL para evitar conflictos de "Temporal Dead Zone", usamos la global
+    
+        // Como las localidades son un array (JSON), lo parsearmos
+    const localidades = JSON.parse(elementoEvento.dataset.localidades);
+
+        // Para depurar, mostramos por consola los datos que hemos extraído
+    console.log("Cargado evento:", EVENTO_ID);
+    console.log("Localidades para resaltar:", localidades);
 
     // --------- Añadimos los eventos a los elementos del DOM ------------------------------
 
@@ -233,7 +369,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 // Si todo ha ido bien, ocultamos y limpiamos el form
                 ocultarElemento(formComentario);
-                limpiarEltosFormulario(labelNombre, labelEmail, labelTexto);
+                limpiarEltosFormularioComen(labelNombre, labelEmail, labelTexto);
             } else {
                 alert("Hubo un problema al guardar el comentario: " + data.message);
             }
@@ -250,7 +386,7 @@ document.addEventListener("DOMContentLoaded", function() {
     btnCancelarComentario.addEventListener('click', function() {
         ocultarElemento(formComentario); // Ocultamos el formulario
         // Limpiamos los campos del formulario
-        limpiarEltosFormulario(labelNombre, labelEmail, labelTexto);
+        limpiarEltosFormularioComen(labelNombre, labelEmail, labelTexto);
     });
 
     // evento para ocultar el dialogo modal personalizado (para errores)
@@ -278,4 +414,150 @@ document.addEventListener("DOMContentLoaded", function() {
         // Paso 3: Devolvemos el texto ya corregido a la caja del formulario
         campoTexto.value = textoActual;
     });
+
+    // --------------------------------------------------------------------
+    //                      BORRADO DE COMENTARIOS
+    // --------------------------------------------------------------------
+
+    const botonesBorrar = document.querySelectorAll('.btn-borrar-comentario');
+
+    botonesBorrar.forEach( boton => {
+        boton.addEventListener('click', async function() {
+
+            // Dialogo de confirmación antes de borrar
+            if(confirm("¿Estás seguro de que quieres eliminar este comentario? Esta acción no se puede deshacer.")) {
+                // Si es que si, ejecutamos la función de borrado
+
+                // Buscamos la tarjeta del comentario
+                const tarjetaComentario = this.closest('.comentario');
+                const comentarioId = tarjetaComentario.dataset.id;
+
+                try {
+                    // Hacemos la petición al servidor con Fetch
+                    const respuesta = await fetch(BASE_URL + 'borrar_comentario.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id: comentarioId })
+                    });
+
+                    // Esperamos la respuesta del servidor 
+                    const resultado = await respuesta.json();
+
+                    // Si el servidor nos confirma que se ha borrado bien en la base de datos 
+                    // entonces borramos la tarjeta del comentario del DOM
+                    if (respuesta.ok && resultado.exito) {
+                        tarjetaComentario.style.transition = "opacity 0.5s ease";
+                        tarjetaComentario.style.opacity = "0";
+                        setTimeout(() => tarjetaComentario.remove(), 500);
+                    } else {
+                        alert("Error: " + (resultado.error || "No se pudo borrar"));
+                    }
+                } catch (error) {
+                    console.error('Error en la petición AJAX:', error);
+                    alert("Hubo un problema de conexión con el servidor.");
+                }
+            }
+        });
+    });
+
+    // --------------------------------------------------------------------
+    //                      EDICIÓN DE COMENTARIOS
+    // --------------------------------------------------------------------
+    const botonesEditar = document.querySelectorAll('.btn-editar-comentario');
+
+    botonesEditar.forEach(boton => {
+        boton.addEventListener('click', async function() {
+            const tarjetaComentario = this.closest('.comentario');
+            const comentarioId = tarjetaComentario.dataset.id;
+            const parrafoTexto = tarjetaComentario.querySelector('.texto-del-comentario');
+
+            // Si el botón dice "Editar", transformamos el texto en un textarea
+            if (this.textContent === 'Editar') {
+                const textoActual = parrafoTexto.innerText;
+                
+                // Creamos el campo de texto editable
+                const textarea = document.createElement('textarea');
+                textarea.className = 'edit-textarea';
+                textarea.style.width = '100%';
+                textarea.style.minHeight = '80px';
+                textarea.style.marginTop = '10px';
+                textarea.style.backgroundColor = 'rgba(248, 245, 230)';
+                textarea.style.color = 'black';
+                textarea.value = textoActual;
+
+                // Reemplazamos el párrafo por el textarea
+                parrafoTexto.replaceWith(textarea);
+
+                // Cambiamos el aspecto del botón
+                this.textContent = 'Guardar';
+                this.style.backgroundColor = '#28a745'; // Color verde para indicar guardado
+            } 
+            // Si el botón dice "Guardar", enviamos los datos por FETCH
+            else if (this.textContent === 'Guardar') {
+                const textarea = tarjetaComentario.querySelector('.edit-textarea');
+                const nuevoTexto = textarea.value;
+
+                try {
+                    const respuesta = await fetch(BASE_URL + 'editar_comentario.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id: comentarioId, texto: nuevoTexto })
+                    });
+
+                    const resultado = await respuesta.json();
+
+                    if (respuesta.ok && resultado.exito) {
+                        // Creamos un nuevo párrafo con el texto finalizado (incluye la firma)
+                        const nuevoParrafo = document.createElement('p');
+                        nuevoParrafo.className = 'texto-del-comentario';
+                        nuevoParrafo.innerText = resultado.texto_actualizado; // Usamos innerText para respetar los saltos de línea
+
+                        // Reemplazamos el textarea por el párrafo final
+                        textarea.replaceWith(nuevoParrafo);
+
+                        // Devolvemos el botón a su estado original
+                        this.textContent = 'Editar';
+                        this.style.backgroundColor = ''; // Restablece el color CSS original
+                    } else {
+                        alert("Error: " + (resultado.error || "No se pudo editar"));
+                    }
+                } catch (error) {
+                    console.error('Error en la petición AJAX:', error);
+                    alert("Hubo un problema de conexión con el servidor.");
+                }
+            }
+        });
+    });
+
+    // ==========================================================================================================
+    //                          VALIDACIÓN DE FORMULARIO DE REGISTRO
+    // ==========================================================================================================
+    const formRegistro = document.querySelector('form[action*="guardar_registro.php"]');
+        
+    if (formRegistro) {
+        formRegistro.addEventListener('submit', function(evento) {
+            let email = document.getElementById('email').value;
+            let password = document.getElementById('password').value;
+            let password_confirm = document.getElementById('password_confirm').value;
+
+            if (!esEmailValido(email)) {
+                alert("❌ Por favor, introduce un correo electrónico válido.");
+                evento.preventDefault(); 
+                return;
+            }
+
+            if (!esPasswordFuerte(password)) {
+                alert("❌ La contraseña debe tener al menos 8 caracteres, incluir una letra y un número.");
+                evento.preventDefault();
+                return;
+            }
+
+            // Comprobar que las contraseñas coinciden
+            if (password !== password_confirm) {
+                alert("❌ Las contraseñas no coinciden.");
+                evento.preventDefault();
+                return;
+            }
+        });
+    }
 });
