@@ -563,7 +563,7 @@ class BD {
             $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
             // Paso 2: Si el usuario existe y la contraseña es correcta...
-            if ($usuario && password_verify($passwordInput, $usuario['password'])) {            // Devolvemos los datos del usuario (sin el hash, por seguridad)
+            if ($usuario && password_verify($passwordInput, $usuario['password'])) {            
                 // Devolvemos los datos del usuario (sin el hash, por seguridad)
                 unset($usuario['password']); 
                 return $usuario;
