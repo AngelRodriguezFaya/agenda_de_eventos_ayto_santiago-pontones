@@ -388,6 +388,78 @@ main   {
     color: #3c70c3;
 }
 
+/* ----------------- Buscador tipo Google ----------------- */
+
+.contenedor-buscador-portada {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0 30px 0;
+}
+
+.buscador-google {
+    position: relative;
+    width: 90%;          
+    max-width: 900px;    
+}
+
+.buscador-google input {
+    width: 100%;
+    padding: 14px 25px;
+    font-size: 1.1rem;
+    background-color: rgb(248, 245, 230);  
+    border: 2px solid #c9c4a8;             
+    border-radius: 25px;
+    outline: none;
+    box-sizing: border-box;
+    color: #333;
+}
+
+.buscador-google input:focus {
+    border-color: #2052a2;   
+    box-shadow: 0 2px 8px rgba(32, 82, 162, 0.2);
+}
+
+#desplegable-busqueda {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: rgb(248, 245, 230);
+    border: 1px solid #c9c4a8;
+    border-top: none;
+    border-radius: 0 0 15px 15px;
+    list-style: none;
+    margin: 0;
+    padding: 5px 0;
+    z-index: 1000;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+#desplegable-busqueda li a {
+    display: block;
+    padding: 12px 25px;
+    color: #333;
+    text-decoration: none;
+    font-size: 1rem;
+    border-bottom: 1px solid #e5e0c8;  /* Separador sutil entre resultados */
+}
+
+#desplegable-busqueda li:last-child a {
+    border-bottom: none;   /* El último elemento no tiene separador */
+}
+
+#desplegable-busqueda li a:hover {
+    background-color: #ece8d0;   /* Crema ligeramente más oscuro al pasar el ratón */
+    color: #2052a2;              
+    padding-left: 35px;          /* Pequeño desplazamiento al hacer hover */
+    transition: all 0.15s ease;
+}
+
+#desplegable-busqueda li.sin-resultados {
+    padding: 12px 25px;
+    color: #999;
+    font-style: italic;
+}
 
 /* ========================== MEDIA QUERIES =============================== */
 
@@ -667,7 +739,7 @@ article.evento .galeria-imagenes h3 {
 /* La clase 'oculto' (Indica si el panel se encuentra oculto) */
 #panel_comentarios.oculto {
     transform: translateX(100%); /* Para mover el panel completamente fuera de la pantalla  y hacia la derecha */
-    display: block; 
+    display: block !important; 
 }
 
 /* ================= Estilos de los elementos del panel de comentarios ================= */
@@ -1064,7 +1136,7 @@ article.evento .galeria-imagenes h3 {
 
 .grupo-buscador-unido {
     display: flex;
-    border-radius: 25px;
+    border-radius: 20px;
     overflow: hidden;
     background-color: #fff;
     border: 2px solid #ccc;
@@ -1101,7 +1173,8 @@ article.evento .galeria-imagenes h3 {
 }
 
 .btn-limpiar-busqueda {
-    color: #ffcccc;
+    color: white;
+    background-color: rgb(253, 89, 89) !important;
     text-decoration: underline;
     font-size: 14px;
 }
@@ -1134,6 +1207,7 @@ article.evento .galeria-imagenes h3 {
     overflow: hidden;
     border: 1px solid #bbb;
     background-color: #ddd;
+    align-self: center; /* Para centrar el cartel verticalmente si el contenido de la derecha es más alto */
 }
 
 .imagen-cartel-gestor {
@@ -1211,6 +1285,37 @@ article.evento .galeria-imagenes h3 {
     border-radius: 12px;
     font-size: 11px;
     font-weight: bold;
+}
+
+.switch-visibilidad {
+    display: flex;
+    flex-direction: column; /* 1. Cambia de fila a columna (Checkbox arriba, texto abajo) */
+    align-items: center;    /* 2. Centra horizontalmente el checkbox y el texto */
+    text-align: center;     /* 3. Asegura que el texto se alinee al centro si ocupa más de una línea */
+    gap: 6px;               /* Espacio de separación vertical entre el cuadradito y el texto */
+    cursor: pointer;
+}
+
+/* Para asegurarnos de que el checkbox no tenga comportamientos raros */
+.switch-visibilidad input[type="checkbox"] {
+    margin: 0; 
+    width: 18px; 
+    height: 18px;
+    cursor: pointer;
+}
+
+.columna-visibilidad-gestor {
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centra el texto de "Guardado" debajo del botón */
+    gap: 5px;
+}
+
+.mensaje-evento-publicado {
+    color: #28a745;
+    font-size: 0.8em;
+    margin-top: 5px;
 }
 
 /* ==========================================================================
