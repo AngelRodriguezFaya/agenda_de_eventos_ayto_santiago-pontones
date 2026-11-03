@@ -14,11 +14,18 @@
 !/config/vhosts/default.conf
 
 /config/ssl/
-/data/
+/data/*
+!/data/.gitkeep
 !/data/mysql/
-/logs/
+/data/mysql/*
+!/data/mysql/.gitkeep
+/logs/*
 !/logs/apache2/
+/logs/apache2/*
+!/logs/apache2/.gitkeep
 !/logs/mysql/
+/logs/mysql/*
+!/logs/mysql/.gitkeep
 
 .DS_Store
 /buildtest/
