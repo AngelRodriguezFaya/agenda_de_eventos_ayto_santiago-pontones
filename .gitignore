@@ -1,8 +1,24 @@
 *.pdf
 /.env
 /.vscode
+
+# Docker configuration templates and database initialization
 /config/*
-/logs/*
+!/config/initdb/
+!/config/initdb/SIBW_AGENDA_EVENTOS.sql
+!/config/mysql/
+!/config/mysql/my.cnf
+!/config/php/
+!/config/php/php.ini
+!/config/vhosts/
+!/config/vhosts/default.conf
+
+/config/ssl/
+/data/
+!/data/mysql/
+/logs/
+!/logs/apache2/
+!/logs/mysql/
+
 .DS_Store
-/buildtest
-/data
+/buildtest/
