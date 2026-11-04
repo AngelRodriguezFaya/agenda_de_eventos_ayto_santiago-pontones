@@ -29,3 +29,7 @@
 
 .DS_Store
 /buildtest/
+
+/docs/*
+!/docs/imgs/
+!/docs/diseno/
