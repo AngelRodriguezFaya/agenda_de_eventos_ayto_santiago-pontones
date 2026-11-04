@@ -19,9 +19,14 @@ body {
     gap: 20px; /* Espacio entre los bloques */
 }
 
-/*Ocultamos lo que no se va a impriir*/
+/*Ocultamos lo que no se va a imprimir*/
 header nav, aside, .zona-comentarios { 
     display:none;
+}
+
+/* El modal de login no tiene que aparecer como parte del contenido imprimible. */
+#modal-login {
+    display: none !important;
 }
 
 /* -------------------- HEADER ------------------------------------------*/
